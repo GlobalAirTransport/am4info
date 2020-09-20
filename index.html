@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <!--STYLESHEETS-->
+      <link rel="stylesheet" href="index.css" type="text/css"></link>
+      <!--FONTS-->
+      <link href='https://fonts.googleapis.com/css?family=Baloo Thambi 2' rel='stylesheet' type="text/css"></link>
+      <link href='https://fonts.googleapis.com/css?family=Exo 2' rel='stylesheet' type="text/css"></link>
+      <!--ICONS-->
+      <link rel="stylesheet" href="https://i5g3k7c2.stackpathcdn.com/assets/css/min/glyphicons.css" type="text/css"></link>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"></link>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css"></link>
+      <script src="https://kit.fontawesome.com/a076d05399.js" type="text/javascript"></script>
+      <!--CSS LIBS-->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" type="text/css">
+      </link>
+      <!--JS LIBS-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script><!--jQuery-->
+      <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin="" type="text/javascript">
+      </script><!--Leaflet Mapping-->
+      <script src="https://cdn.jsdelivr.net/npm/leaflet.geodesic"></script><!--Leaflet Routing-->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script><!--Chart JS-->
+   </head>
+   <body onresize="refreshChartSize()">
+      <div id="map">
+         <nav id="topMenu" class="topmenu">
+            <ul class="reqrem-ul">
+               <li class="reqrem-li">
+                  <span class="reqrem-span">API Requests Remaining</span><br>
+                  <div class="reqrem-res">
+                     <span id="reqrem">Will be added soon</span>
+                  </div>
+               </li>
+            </ul>
+            <ul class="rem-nav">
+               <li class="map-filter">
+                  <span id="filter-icon" class="fa fa-filter" style="margin-right: 10px"></span>
+               </li>
+               <li class="contact-mail">
+                  <span id="mail-icon" class="glyphicons glyphicons-envelope" style="margin-right: 10px;"></span>
+               </li>
+               <li class="settings">
+                  <span id="settings-icon" class="glyphicons glyphicons-cogwheel setting-ic"></span>
+               </li>
+            </ul>
+         </nav>
+         <div id="filter-res">
+            <h3>MAP RUNWAY FILTER</h3>
+            <label for="map-maxrwy">Max Runway Length (ft)</label><br>
+            <input type="text" maxlength="5" class="form-control input-filter no-shadow" id="map-maxrwy" placeholder="Max Rwy Length (ft)"><br>
+            <button id="map-apply">Apply!</button><br>
+            <span class="fa fa-chevron-up" id="filter-removeres" style="margin-top: 8px; margin-bottom: 6px;"></span>
+         </div>
+      </div>
+      <div id="r-nav-btns">
+         <div id="btn1" class="r-nav" data-placement="left" data-toggle="tooltip" title="PAX TOOLS">
+            <i class="fa fa-users" style="font-size: 19px; color: #fff;"></i>
+         </div>
+         <div id="btn2" class="r-nav" data-placement="left" data-toggle="tooltip" title="CARGO TOOLS">
+            <i class="glyphicons glyphicons-cargo" style="font-size: 19px; color: #fff;"></i>
+         </div>
+         <div id="btn3" class="r-nav" data-placement="left" data-toggle="tooltip" title="ROUTE TOOLS">
+            <i class="fa fa-map-marked-alt" style="font-size: 19px; color: #fff;"></i>
+         </div>
+         <div id="btn4" class="r-nav" data-placement="left" data-toggle="tooltip" title="OTHER TOOLS">
+            <i class="fa fa-globe-americas" style="font-size: 22px; color: #fff;"></i>
+         </div>
+         <div id="btn5" class="r-nav" data-placement="left" data-toggle="tooltip" title="STATISTICS/CHARTS">
+            <i class="fa fa-chart-line" style="font-size: 21px; color: #fff;"></i>
+         </div>
+         <div id="btn6" class="r-nav" data-placement="left" data-toggle="tooltip" title="GUIDES/FAQ">
+            <i class="fa fa-book" style="font-size: 22px; color: #fff;"></i>
+         </div>
+      </div>
+      <div id="alertbox">
+         <span id="closebtn">&times;</span>
+         <span id="alerttext"></span>
+      </div> 
+      <div class="whole-scr-modal">
+         <!--PAX MENU-->
+         <div class="modal-content" id="paxmenu">
+            <div class="modal-header">
+               <h5 class="pop-title baloo-f">PAX TOOLS
+                  <span class="glyphicons glyphicons-remove closebtn" data-dismiss="modal"></span>
+               </h5>
+            </div>
+            <div class="pop-content">
+               <div class="pop-select-btns" role="group">
+                  <button class="pop-btn baloo-f transition" id="btn-pax1">
+                     <span class="fa fa-ticket-alt"></span>
+                     Ticket
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-pax2">
+                     <img class="fs-icon" src="https://static.thenounproject.com/png/91605-200.png">
+                     Seats
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-pax3">
+                     <span class="fa fa-dollar-sign"></span>
+                     Profit
+                  </button>
+               </div>
+            </div>
+            <div class="modal-main">
+               <!--TICKET-->
+               <div id="tool-pax1" class="tools">
+                  <h4>PAX Ticket Price Calculator</h4>    
+                  <label for="distancePaxTicket">Route Distance</label>
+                  <input type="text" id="distancePaxTicket" placeholder="Distance (km)" maxlength="5" class="form-control cat1" oninput="filterInput(this)"><br>
+                  <button class="toolbtn" id="exec1">Calculate!</button><br><br>
+               </div>
+               <div id="ans-pax1" class="tool-answer margin-down">
+                  <button class="returnbtn" id="pax-ret1">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat1-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat1-s2">Easy</button>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/economy_seat.png" class="fs-icon">
+                           Economy Class</td>
+                        <td id="yTicket" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/business_seat.png" class="fs-icon">
+                           Business Class</td>
+                        <td id="jTicket" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/first_seat.png" class="fs-icon">
+                           First Class</td>
+                        <td id="fTicket" class="tr"></td>
+                     </tr>
+                  </table>
+               </div>
+               <!--CONFIG-->
+               <div id="tool-pax2" class="tools">
+                  <h4>Seat Configurator</h4>
+                  <label for="capacitySeat">Capacity</label>
+                  <input type="text" id="capacitySeat" placeholder="Capacity" maxlength="3" class="form-control cat2" oninput="filterInput(this)"><br>    
+                  <label for="distanceSeat">Route Distance</label>
+                  <input type="text" id="distanceSeat" placeholder="Distance (km)" maxlength="5" class="form-control cat2" oninput="filterInput(this)"><br>    
+                  <label for="flDaySeat">Flights Per Day</label>
+                  <input type="text" id="flDaySeat" placeholder="Flights Per Day" maxlength="2" class="form-control cat2" oninput="filterInput(this)"><br>    
+                  <label for="yDemandSeat">Y-Class Demand</label>
+                  <input type="text" id="yDemandSeat" placeholder="Y-Class Demand" maxlength="4" class="form-control cat2" oninput="filterInput(this)"><br>                        
+                  <label for="jDemandSeat">J-Class Demand</label>
+                  <input type="text" id="jDemandSeat" placeholder="J-Class Demand" maxlength="4" class="form-control cat2" oninput="filterInput(this)"><br>
+                  <label for="fDemandSeat">F-Class Demand</label>
+                  <input type="text" id="fDemandSeat" placeholder="F-Class Demand" maxlength="3" class="form-control cat2" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec2">Calculate!</button>
+               </div>
+               <div id="ans-pax2" class="tool-answer margin-down">
+                  <button class="returnbtn" id="pax-ret2">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat2-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat2-s2">Easy</button>
+                  </div>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat2-s3">Normal</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat2-s4">Max Demand</button>
+                  </div>
+                  <div class="tooltip">
+                     <i class="glyphicons glyphicons-question-sign tooltip-icon"></i>
+                     Normal vs Max Demand
+                     <span class="tooltiptext">
+                        Assuming we have a total demand of 250 J-Class-Pax and 2 flights per day.<br>
+                        <b>Normal</b> mode will tell you to buy 125 seats, while <b>Max Demand</b> mode will tell you to buy 130-135 seats.<br>
+                        You might be able to carry more F-Class and J-Class passengers with Max Demand mode since your plane won't be 100% filled.
+                     </span>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <th id="seatPref"></th>
+                     </tr>
+                     <!--PROFIT VERSION-->
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/economy_seat.png" class="fs-icon">
+                           Economy Class</td>
+                        <td id="ySeatFirst" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/business_seat.png" class="fs-icon">
+                           Business Class</td>
+                        <td id="jSeatFirst" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <img src="https://www.airline4.net/assets/img/aircraft/configuration/first_seat.png" class="fs-icon">
+                           First Class</td>
+                        <td id="fSeatFirst" class="tr"></td>
+                     </tr>
+                     <!--
+                     <div style="display: none">
+                        <tr class="res-1">
+                           <td class="tl">
+                              <img src="https://www.airline4.net/assets/img/aircraft/configuration/economy_seat.png" class="fs-icon">
+                              Economy Class</td>
+                           <td id="ySeatAlt" class="tr"></td>
+                        </tr>
+                        <tr class="res-1">
+                           <td class="tl">
+                              <img src="https://www.airline4.net/assets/img/aircraft/configuration/business_seat.png" class="fs-icon">
+                              Business Class</td>
+                           <td id="jSeatAlt" class="tr"></td>
+                        </tr>
+                        <tr class="res-1">
+                           <td class="tl">
+                              <img src="https://www.airline4.net/assets/img/aircraft/configuration/first_seat.png" class="fs-icon">
+                              First Class</td>
+                           <td id="fSeatAlt" class="tr"></td>
+                        </tr>
+                     </div>-->
+                  </table>
+               </div>
+               <!--PROFIT-->
+               <div id="tool-pax3" class="tools">
+                  <h4>PAX Profit Calculator</h4>
+                  <label for="airplaneProfit">Aircraft Type</label>
+                  <input list="acList" type="text" id="airplaneProfit" placeholder="Aircraft Type" class="form-control cat3"><br>
+                  <label for="distanceProfit">Route Distance</label>
+                  <input type="text" id="distanceProfit" placeholder="Distance (km)" maxlength="5" class="form-control cat3" oninput="filterInput(this)"><br>  
+                  <label for="ySeatsProfit">Y-Class Seats</label>
+                  <input type="text" id="ySeatsProfit" placeholder="Y-Class Seats" maxlength="3" class="form-control cat3" oninput="filterInput(this)"><br>
+                  <label for="jSeatsProfit">J-Class Seats</label>
+                  <input type="text" id="jSeatsProfit" placeholder="J-Class Seats" maxlength="3" class="form-control cat3" oninput="filterInput(this)"><br>
+                  <label for="fSeatsProfit">F-Class Seats</label>
+                  <input type="text" id="fSeatsProfit"  placeholder="F-Class Seats" maxlength="3" class="form-control cat3" oninput="filterInput(this)"><br>
+                  <label for="flDayProfit">Flights Per Day</label>
+                  <input type="text" id="flDayProfit" placeholder="Flights Per Day" maxlength="2" class="form-control cat3" oninput="filterInput(this)"><br> 
+                  <label for="reptProfit">Reputation</label>
+                  <input type="text" id="reptProfit" placeholder="Reputation (%)" max="99" maxlength="2" class="form-control cat3" oninput="filterInput(this)"><br>
+                  <label for="fPrxProfit">Fuel Price</label>
+                  <input type="text" id="fPrxProfit" placeholder="Fuel Price / 1000 lbs" maxlength="4" class="form-control cat3" oninput="filterInput(this)"><br>  
+                  <label for="cPrxProfit">CO2 Quota Price</label>
+                  <input type="text" id="cPrxProfit" placeholder="CO2 Price / 1000 quotas" maxlength="3" class="form-control cat3" oninput="filterInput(this)"><br>
+                  <datalist id="acList"></datalist>
+                  <button class="toolbtn margin-down" id="exec3">Calculate!</button>
+               </div>
+               <div id="ans-pax3" class="tool-answer margin-down">
+                  <button class="returnbtn" id="pax-ret3">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat3-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat3-s2">Easy</button>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-dollar-sign col-dol"></i> Profit/Flight
+                        </td>
+                        <td id="perFlightProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-dollar-sign col-dol"></i> Profit/Day
+                        </td>
+                        <td id="perDayProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl" colspan="2">
+                           Additional Info (per flight):
+                        </td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-tint"></i> Fuel Usage
+                        </td>
+                        <td id="fuelUsageProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-tint"></i> Fuel Cost
+                        </td>
+                        <td id="fuelCostProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                        </td>
+                        <td id="coUsageProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                        </td>
+                        <td id="coCostProfit" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-wrench col-ccc"></i> Maintenance
+                        </td>
+                        <td id="maintProfit" class="tr"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <!--CARGO MENU-->
+         <div class="modal-content" id="cargomenu">
+            <div class="modal-header">
+               <h5 class="pop-title baloo-f">CARGO TOOLS
+                  <span class="glyphicons glyphicons-remove closebtn" data-dismiss="modal"></span>
+               </h5>
+            </div>
+            <div class="pop-content">
+               <div class="pop-select-btns" role="group">
+                  <button class="pop-btn baloo-f transition" id="btn-car1">
+                     <span class="fa fa-ticket-alt"></span>
+                     Ticket
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-car2">
+                     Configuration
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-car3">
+                     <span class="fa fa-dollar-sign"></span>
+                     Profit
+                  </button>
+               </div>
+            </div>
+            <div class="modal-main">
+               <!--TICKET-->
+               <div id="tool-car1" class="tools">
+                  <h4>Cargo Ticket Calculator</h4>
+                  <label for="distanceCTicket">Route Distance</label>
+                  <input type="text" id="distanceCTicket" placeholder="Distance (km)" maxlength="5" class="form-control cat4" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec4">Calculate!</button>
+               </div>
+               <div id="ans-car1" class="tool-answer margin-down">
+                  <button class="returnbtn" id="car-ret1">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat4-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat4-s2">Easy</button>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-cargo col-cyellow"></i> Large Load
+                        </td>
+                        <td id="lTicket" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-cargo col-cred"></i> Heavy Load
+                        </td>
+                        <td id="hTicket" class="tr"></td>
+                     </tr>
+                  </table>
+               </div>
+               <!--CONFIG-->
+               <div id="tool-car2" class="tools">
+                  <h4>Cargo Configurator</h4>
+                  <label for="largeTraining" id="tr1">Large Load Training --0/6</label><br>
+                  <input type="range" id="largeTraining" min="0" max="6" value="0" class="slider"><br>
+                  <label for="heavyTraining" id="tr2">Heavy Load Training --0/6</label><br>
+                  <input type="range" id="heavyTraining" min="0" max="6" value="0" class="slider"><br>
+                  <label for="capacityLoad">Capacity</label>
+                  <input type="text" id="capacityLoad" placeholder="Capacity" maxlength="6" class="form-control cat5" oninput="filterInput(this)"><br>
+                  <label for="lDemandLoad">Large Load Demand</label>
+                  <input type="text" id="lDemandLoad" placeholder="Large Load Demand (lbs/day)" maxlength="7" class="form-control cat5" oninput="filterInput(this)"><br>
+                  <label for="hDemandLoad">Heavy Load Demand</label>
+                  <input type="text" id="hDemandLoad" placeholder="Heavy Load Demand (lbs/day)" maxlength="8" class="form-control cat5" oninput="filterInput(this)"><br>
+                  <label for="flDayLoad">Flights Per Day</label>
+                  <input type="text" id="flDayLoad" placeholder="Flights Per Day" maxlength="2" class="form-control cat5" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec5">Calculate!</button>
+               </div>
+               <div id="ans-car2" class="tool-answer margin-down">
+                  <button class="returnbtn" id="car-ret2">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat5-s1">Normal</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat5-s2">Max Demand</button>
+                  </div>
+                  <div class="tooltip">
+                     <i class="glyphicons glyphicons-question-sign tooltip-icon"></i>
+                     Normal vs Max Demand
+                     <span class="tooltiptext">
+                        Assuming we have a total demand of 250 J-Class-Pax and 2 flights per day.<br>
+                        <b>Normal</b> mode will tell you to buy 125 seats, while <b>Max Demand</b> mode will tell you to buy 130-135 seats.<br>
+                        You might be able to carry more F-Class and J-Class passengers with Max Demand mode since your plane won't be 100% filled.
+                     </span>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-cargo col-cyellow"></i> Large Load
+                        </td>
+                        <td class="tr" id="largeOutput"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-cargo col-cred"></i> Heavy Load
+                        </td>
+                        <td class="tr" id="heavyOutput"></td>
+                     </tr>
+                  </table>
+               </div>
+               <!--PROFIT-->
+               <div id="tool-car3" class="tools">
+                  <h4>Cargo Profit Calculator</h4>
+                  <label for="airplaneCP">Aircraft Type</label>
+                  <input list="cargolist" type="text" id="airplaneCP" placeholder="Aircraft Type" class="form-control cat6"><br>        
+                  <label for="distanceCP">Route Distance</label>
+                  <input type="text" id="distanceCP" placeholder="Distance (km)" maxlength="5" class="form-control cat6" oninput="filterInput(this)"><br>        
+                  <label for="lCapCP">Large Load Capacity</label>
+                  <input type="text" id="lCapCP" placeholder="Large Load Capacity (lbs)" maxlength="6" class="form-control cat6" oninput="filterInput(this)"><br>        
+                  <label for="hCapCP">Heavy Load Capacity</label>
+                  <input type="text" id="hCapCP" placeholder="Heavy Load Capacity (lbs)" maxlength="6" class="form-control cat6" oninput="filterInput(this)"><br>        
+                  <label for="flDayCP">Flights Per Day</label>
+                  <input type="text" id="flDayCP" placeholder="Flights Per Day" maxlength="2" class="form-control cat6" oninput="filterInput(this)"><br>        
+                  <label for="reptCP">Reputation</label>
+                  <input type="text" id="reptCP" placeholder="Reputation (%)" max="99" maxlength="2" class="form-control cat6" oninput="filterInput(this)"><br>
+                  <label for="fPrxCP">Fuel Price</label>
+                  <input type="text" id="fPrxCP" placeholder="Fuel Price / 1000 lbs" maxlength="4" class="form-control cat6" oninput="filterInput(this)"><br>        
+                  <label for="cPrxCP">CO2 Quota Price</label>
+                  <input type="text" id="cPrxCP" placeholder="CO2 Price / 1000 quotas" maxlength="3" class="form-control cat6" oninput="filterInput(this)"><br>
+                  <datalist id="cargolist">
+                     <option value="DC3"></option>
+                     <option value="DC9"></option>
+                     <option value="B727-200F"></option>
+                     <option value="B377SG"></option>
+                     <option value="A310-300F"></option>
+                     <option value="A400M"></option>
+                     <option value="IL-76D"></option>
+                     <option value="B757-200F"></option>
+                     <option value="A300-600F"></option>
+                     <option value="IL-96T"></option>
+                     <option value="B767-300F"></option>
+                     <option value="A330-200F"></option>
+                     <option value="B777 Freighter"></option>
+                     <option value="B747-400F"></option>
+                     <option value="B747-8F"></option>
+                     <option value="AN-124"></option>
+                     <option value="A380-800F"></option>
+                     <option value="AN-225"></option>
+                 </datalist>
+                 <button class="toolbtn margin-down" id="exec6">Calculate!</button>
+               </div>
+               <div id="ans-car3" class="tool-answer margin-down">
+                  <button class="returnbtn" id="car-ret3">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat6-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat6-s2">Easy</button>
+                  </div>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-dollar-sign col-dol"></i> Profit/Flight
+                        </td>
+                        <td id="perFlightProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-dollar-sign col-dol"></i> Profit/Day
+                        </td>
+                        <td id="perDayProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl" colspan="2">
+                           Additional Info (per flight):
+                        </td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-tint"></i> Fuel Usage
+                        </td>
+                        <td id="fuelUsageProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="glyphicons glyphicons-tint"></i> Fuel Cost
+                        </td>
+                        <td id="fuelCostProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                        </td>
+                        <td id="coUsageProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                        </td>
+                        <td id="coCostProfitc" class="tr"></td>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-wrench col-ccc"></i> Maintenance
+                        </td>
+                        <td id="maintProfitc" class="tr"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <!--ROUTE MENU-->
+         <div class="modal-content" id="routemenu">
+            <div class="modal-header">
+               <h5 class="pop-title baloo-f">ROUTE TOOLS
+                  <span class="glyphicons glyphicons-remove closebtn" data-dismiss="modal"></span>
+               </h5>
+            </div>
+            <div class="pop-content">
+               <div class="pop-select-btns" role="group">
+                  <button class="pop-btn baloo-f transition" id="btn-rts1">
+                     <span class="fa fa-plane-arrival"></span>
+                     Stopover
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-rts2">
+                     <span class="fa fa-search-dollar"></span>
+                     Market%
+                  </button>
+               </div>
+            </div>
+            <div class="modal-main">
+               <!--STOPOVER-->
+               <div id="tool-rts1" class="tools">
+                  <h4>Stopover Finder</h4>
+                  <label for="departStopover">Departure</label>
+                  <input list="airportList" type="text" id="departStopover" placeholder="IATA/ICAO" class="form-control cat7"><br>                        
+                  <label for="arrivalStopover">Destination</label>
+                  <input list="airportList" type="text" id="arrivalStopover" placeholder="IATA/ICAO" class="form-control cat7"><br>        
+                  <label for="rangeStopover">Aircraft Range</label>
+                  <input type="text" id="rangeStopover" placeholder="Range (km)" maxlength="5" class="form-control cat7" oninput="filterInput(this)"><br>                        
+                  <label for="rwyStopover">Min. Runway (optional)</label>
+                  <input type="text" id="rwyStopover" placeholder="Leave blank to skip" maxlength="5" class="form-control cat7" oninput="filterInput(this)"><br>
+                  <datalist id="airportList"></datalist>
+                  <button class="toolbtn margin-down" id="exec7">Search!</button>
+               </div>
+               <div id="ans-rts1" class="tool-answer margin-down">
+                  <button class="returnbtn" id="rts-ret1">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <table>
+                     <tr class="res-1">
+                        <th colspan="2">
+                           <span id="iciaStopover" class="st-hideable"></span><br>
+                           <span id="stopoverStopover"></span>
+                        </th>
+                     </tr>
+                     <tr class="res-1 st-hideable">
+                        <td class="tl">
+                           <i class="fa fa-plus"></i> Add. Distance
+                        </td>
+                        <td id="distanceStopover" class="tr"></td>
+                     </tr>
+                     <tr class="res-1 st-hideable">
+                        <td class="tl">
+                           <i class="fa fa-route"></i> Total Distance
+                        </td>
+                        <td id="totDistStopover" class="tr"></td>
+                     </tr>
+                  </table>
+                  <div id="stopover-map"></div>
+               </div>
+               <!--MARKET% FIND-->
+               <div id="tool-rts2" class="tools">
+                  <h4>Market% Finder</h4>
+                  <label for="marketMin" id="tr3">Min. Market% --90%</label><br>
+                  <input type="range" id="marketMin" min="80" max="90" value="90" class="slider"><br>
+                  <label for="marketDeparture">Departure</label>
+                  <input list="airportList" type="text" id="marketDeparture" placeholder="IATA/ICAO" class="form-control cat8"><br>
+                  <label for="marketRwy">Min. Runway (optional)</label>
+                  <input type="text" id="marketRwy" placeholder="Leave blank to skip" maxlength="5" class="form-control cat8" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec8">Search!</button>
+               </div>
+               <div id="ans-rts2" class="tool-answer margin-down">
+                  <button class="returnbtn" id="rts-ret2">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <table>
+                     <tr class="res-1">
+                        <th colspan="2">
+                           <span id="iciaMarket" class="m-hideable"></span><br>
+                           <span id="airportMarket"></span>
+                        </th>
+                     </tr>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-arrows-alt-h"></i> Distance
+                        </td>
+                        <td class="tr" id="distMarket"></td>
+                     </tr>
+                     <tr class="res-1 m-hideable">
+                        <td class="tl">
+                           <i class="fa fa-percent"></i> Market%
+                        </td>
+                        <td class="tr" id="mpMarket"></td>
+                     </tr>
+                     <tr class="res-1 m-hideable">
+                        <td class="tl">
+                           <i class="fa fa-road"></i> Runway
+                        </td>
+                        <td class="tr" id="rwyMarket"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <!--OTHER MENU-->
+         <div class="modal-content" id="othermenu">
+            <div class="modal-header">
+               <h5 class="pop-title baloo-f">OTHER TOOLS
+                  <span class="glyphicons glyphicons-remove closebtn" data-dismiss="modal"></span>
+               </h5>
+            </div>
+            <div class="pop-content">
+               <div class="pop-select-btns" role="group">
+                  <button class="pop-btn baloo-f transition" id="btn-oth1">
+                     <span class="fa fa-plane" data-dismiss="modal"></span>
+                     A/C Search
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-oth2">
+                     <span class="fa fa-hand-holding-usd" data-dismiss="modal"></span>
+                     Resell
+                  </button>
+               </div>
+            </div>
+            <div class="modal-main">
+               <!--AC SEARCH-->
+               <div id="tool-oth1" class="tools">
+                  <h4>A/C Filter Tool</h4>
+                  <label for="minspeed">Min. Speed (kph)</label>
+                  <input type="text" id="minspeed" placeholder="Leave blank to skip" maxlength="4" class="form-control cat9" oninput="filterInput(this)"><br>
+                  <label for="mincap">Min. Capacity</label>
+                  <input type="text" id="mincap" placeholder="Leave blank to skip" maxlength="3" class="form-control cat9" oninput="filterInput(this)"><br>
+                  <label for="maxprice">Max. Price ($)</label>
+                  <input type="text" id="maxprice" placeholder="Leave blank to skip" maxlength="9" class="form-control cat9" oninput="filterInput(this)"><br>
+                  <label for="minrange">Min. Range (km)</label>
+                  <input type="text" id="minrange" placeholder="Leave blank to skip" maxlength="5" class="form-control cat9" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec9">Search!</button>
+               </div>
+               <div id="ans-oth1" class="tool-answer margin-down">
+                  <button class="returnbtn" id="oth-ret1">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+               </div>
+               <!--RESELL VALUE-->
+               <div id="tool-oth2" class="tools">
+                  <h4>Resell Value Calculator</h4>    
+                  <label for="airplaneResell">Aircraft Type</label>
+                  <input list="acList" type="text" id="airplaneResell" placeholder="Aircraft Type" class="form-control"><br>
+                  <label for="marketPercentResell">Market%</label>
+                  <input type="text" id="marketPercentResell" placeholder="Market Percent" maxlength="2" class="form-control" oninput="filterInput(this)"><br>
+                  <label for="jSeatsResell">J-Class Seats</label>
+                  <input type="text" id="jSeatsResell" placeholder="J-Class Seats" maxlength="3" class="form-control" oninput="filterInput(this)"><br>
+                  <label for="fSeatsResell">F-Class Seats</label>
+                  <input type="text" id="fSeatsResell" placeholder="F-Class Seats" maxlength="4" class="form-control" oninput="filterInput(this)"><br>
+                  <label for="hoursResell">Flight Hours</label>
+                  <input type="text" id="hoursResell" placeholder="Flight Hours" maxlength="5" class="form-control" oninput="filterInput(this)"><br>
+                  <button class="toolbtn margin-down" id="exec10">Calculate!</button>
+               </div>
+               <div id="ans-oth2" class="tool-answer margin-down">
+                  <button class="returnbtn" id="oth-ret2">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <table>
+                     <tr class="res-1">
+                        <td class="tl">
+                           <i class="fa fa-hand-holding-usd col-0f0"></i> Resell Value
+                        </td>
+                        <td id="resellV" class="tr"></td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <!--CHARTS-->
+         <div class="modal-content" id="chartmenu">
+            <div class="modal-header">
+               <h5 class="pop-title baloo-f">STATISTICS
+                  <span class="glyphicons glyphicons-remove closebtn" data-dismiss="modal"></span>
+               </h5>
+            </div>
+            <div class="pop-content">
+               <div class="pop-select-btns" role="group">
+                  <button class="pop-btn baloo-f transition" id="btn-cha1">
+                     <span class="fa fa-user" data-dismiss="modal"></span>
+                     Player
+                  </button>
+                  <button class="pop-btn baloo-f transition" id="btn-cha2">
+                     <span class="fa fa-star" data-dismiss="modal"></span>
+                     Alliance
+                  </button>
+               </div>
+            </div>
+            <div class="modal-main">
+               <!--PLAYER-->
+               <div id="tool-cha1" class="tools">
+                  <h4>Player Statistics</h4>
+                  <label for="playerName-p">Airline</label>
+                  <input type="text" id="playerName-p" placeholder="Airline Name" class="form-control cat11"><br>
+                  <button class="toolbtn margin-down" id="exec11">Search!</button>
+               </div>
+               <div id="ans-cha1" class="tool-answer margin-down">
+                  <button class="returnbtn" id="cha-ret1">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <div class="chart-responses">
+                     <div class="main-info baloo-f bb">
+                        <div class="main-info-stats">
+                           <span id="p-rank"></span><br>
+                           <span id="p-name"></span><br>
+                           <span id="p-ally"></span><br>
+                           <span id="p-sv"></span><br>
+                           <span id="p-online"></span><br>
+                           <span id="p-mode"></span><br>
+                        </div>
+                        <img id="p-logo">
+                        <table class="charttable">
+                           <tr>
+                              <td class="tl">Planes</td>
+                              <td id="p-fleet" class="tr"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Routes</td>
+                              <td id="p-routes" class="tr"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Achievements</td>
+                              <td id="p-achi" class="tr"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Founded</td>
+                              <td id="p-foun" class="tr"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Daily Profit</td>
+                              <td id="p-prof" class="tr"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="share-info baloo-f bb">
+                        <h3>SHARE VALUE</h3>
+                        <canvas class="chart" id="p-svchart"></canvas>
+                        <table class="charttable">
+                           <tr>
+                              <td class="tl">Shares Available</td>
+                              <td id="p-savai" class="tr"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Shares Sold</td>
+                              <td id="p-ssold" class="tr"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="fleet-info baloo-f bb">
+                        <h3>FLEET</h3>
+                        <div id="p-fleetinfo"></div>
+                        <canvas class="chart" id="p-fleet1"></canvas><br>
+                        <canvas class="chart" id="p-fleet2"></canvas><br>
+                        <canvas class="chart" id="p-fleet3"></canvas><br>
+                     </div>
+                     <div class="award-info baloo-f bb">
+                        <h3>AWARDS</h3>
+                        <div class="award">
+                           <div class="award-yellow" id="aw1">
+                              <span id="awt1"></span>
+                              <img src="Award images/pax.png" class="award-img">
+                           </div>
+                           <div class="award-yellow" id="aw2">
+                              <span id="awt2"></span>
+                              <img src="Award images/cargo.png" class="award-img">
+                           </div>
+                           <div class="award-yellow" id="aw3">
+                              <span id="awt3"></span>
+                              <img src="Award images/contri.png" class="award-img">
+                           </div>
+                           <div class="award-yellow" id="aw4">
+                              <span id="awt4"></span>
+                              <img src="Award images/ceo.png" class="award-img">
+                           </div>
+                           <div class="award-yellow" id="aw5">
+                              <span id="awt5"></span>
+                              <img src="Award images/service.png" class="award-img">
+                           </div>
+                           <div class="award-yellow" id="aw6">
+                              <span id="awt6"></span>
+                              <img src="Award images/profit.png" class="award-img">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div id="tool-cha2" class="tools">
+                  <h4>Alliance Statistics</h4>
+                  <label for="allyName-a">Alliance</label>
+                  <input type="text" id="allyName-a" placeholder="Alliance Name" class="form-control cat12"><br>
+                  <button class="toolbtn margin-down" id="exec12">Search!</button>
+               </div>
+               <div id="ans-cha2" class="tool-answer margin-down">
+                  <button class="returnbtn" id="cha-ret2">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <div class="chart-responses">
+                     <div class="main-info baloo-f bb">
+                        <div class="main-info-stats">
+                           <span id="a-rank"></span><br>
+                           <span id="a-name"></span><br>
+                           <span id="a-sv"></span><br>
+                           <span id="a-member"></span><br>
+                           <span id="a-req"></span><br>
+                        </div>
+                     </div>
+                     <div class="member-info baloo-f bb">
+                        <h3>MEMBER INFO</h3>
+                        <canvas class="chart" id="a-m1"></canvas>
+                        <canvas class="chart" id="a-m2"></canvas>
+                        <canvas class="chart" id="a-m3"></canvas>
+                        <canvas class="chart" id="a-m4"></canvas>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <script src="functionscript.js" type="text/javascript"></script>
+      <script src="background.js" type="text/javascript"></script>
+      <script src="toolscript.js" type="text/javascript"></script>
+      <script src="dbscripts.js" type="text/javascript"></script>
+      <script src="chartscript.js" type="text/javascript"></script>
+   </body>
+</html>
