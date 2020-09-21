@@ -5,6 +5,8 @@ ALL
    box-sizing: border-box;
    -ms-overflow-style: none;
    scrollbar-width: none;
+   outline: 0;
+   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 body {
    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -801,6 +803,34 @@ CHART SECTION
 }
 .chart {
    margin: auto;
+   min-width: 500px !important;
+}
+.ccont {
+   overflow-x: scroll !important;
+}
+.ccont::-webkit-scrollbar {
+   display: initial !important;
+}
+#chartmenu {
+   overflow-x: scroll;
+}
+@media screen and (min-width: 510px) {
+   .ccont::-webkit-scrollbar {
+      display: none !important;
+   }
+   .ccont {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+   }
+}
+@media screen and (max-width: 509px) {
+   .ccont::-webkit-scrollbar {
+      display: initial !important;
+   }
+   .ccont {
+      -ms-overflow-style: initial !important;
+      scrollbar-width: initial !important;
+   }
 }
 @media screen and (max-width: 600px) {
    #p-logo {

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <meta charset="UTF-8">
+      <meta charset="UTF-8">  
+      <meta name="viewport" content="width=device-width, initial-scale=1">
       <!--STYLESHEETS-->
       <link rel="stylesheet" href="index.css" type="text/css"></link>
       <!--FONTS-->
@@ -758,7 +759,9 @@
                      </div>
                      <div class="share-info baloo-f bb">
                         <h3>SHARE VALUE</h3>
-                        <canvas class="chart" id="p-svchart"></canvas>
+                        <div class="ccont">
+                           <canvas class="chart" id="p-svchart"></canvas>
+                        </div>
                         <table class="charttable">
                            <tr>
                               <td class="tl">Shares Available</td>
@@ -773,9 +776,15 @@
                      <div class="fleet-info baloo-f bb">
                         <h3>FLEET</h3>
                         <div id="p-fleetinfo"></div>
-                        <canvas class="chart" id="p-fleet1"></canvas><br>
-                        <canvas class="chart" id="p-fleet2"></canvas><br>
-                        <canvas class="chart" id="p-fleet3"></canvas><br>
+                        <div class="ccont">
+                           <canvas class="chart" id="p-fleet1"></canvas><br>
+                        </div>
+                        <div class="ccont">
+                           <canvas class="chart" id="p-fleet2"></canvas><br>
+                        </div>
+                        <div class="ccont">
+                           <canvas class="chart" id="p-fleet3"></canvas><br>
+                        </div>
                      </div>
                      <div class="award-info baloo-f bb">
                         <h3>AWARDS</h3>
@@ -827,13 +836,43 @@
                            <span id="a-member"></span><br>
                            <span id="a-req"></span><br>
                         </div>
+                        <table class="charttable">
+                           <tr>
+                              <td class="tl">Avg. Contribution</td>
+                              <td class="tr" id="avC"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Avg. C/D</td>
+                              <td class="tr" id="avCD"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Avg. C/F</td>
+                              <td class="tr" id="avCF"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Avg. Flights</td>
+                              <td class="tr" id="avF"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Avg. SV</td>
+                              <td class="tr" id="avSV"></td>
+                           </tr>
+                        </table>
                      </div>
                      <div class="member-info baloo-f bb">
                         <h3>MEMBER INFO</h3>
-                        <canvas class="chart" id="a-m1"></canvas>
-                        <canvas class="chart" id="a-m2"></canvas>
-                        <canvas class="chart" id="a-m3"></canvas>
-                        <canvas class="chart" id="a-m4"></canvas>
+                        <div class="ccont">
+                           <canvas class="chart" id="a-m1"></canvas>
+                        </div>
+                        <div class="ccont">
+                           <canvas class="chart" id="a-m2"></canvas>
+                        </div>
+                        <div class="ccont">
+                           <canvas class="chart" id="a-m3"></canvas>
+                        </div>
+                        <div class="ccont">
+                           <canvas class="chart" id="a-m4"></canvas>
+                        </div>
                      </div>
                   </div>
                </div>

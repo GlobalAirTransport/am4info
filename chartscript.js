@@ -164,6 +164,7 @@ function playerchart() {
                     }]
                 },
                 options: {
+                    maintainAspectRatio: true,
                     scales: {
                         yAxes: [
                             { 
@@ -283,6 +284,7 @@ function playerchart() {
               ]
             },
             options: {
+                maintainAspectRatio: true,
                 legend: {
                     display: false
                 },
@@ -320,18 +322,21 @@ function playerchart() {
         fC2 = new Chart(document.getElementById("p-fleet2"), {
             type: 'pie',
             data: {
-              labels: fC2name,
-              datasets: [{
-                label: "Amount",
-                backgroundColor: ['#28a745','#dc3545'],
-                data: fC2arr,
-              }]
+                labels: fC2name,
+                datasets: [
+                    {
+                        label: "Amount",
+                        backgroundColor: ['#28a745','#dc3545'],
+                        data: fC2arr,
+                    }
+                ]
             },
             options: {
-              title: {
-                display: true,
-                text: 'PAX/Cargo Planes'
-              }
+                maintainAspectRatio: true,
+                title: {
+                    display: true,
+                    text: 'PAX/Cargo Planes'
+                }
             }
         })
         let fC3labelp = []
@@ -384,6 +389,7 @@ function playerchart() {
                 datasets: parsedData
             },
             options: {
+                maintainAspectRatio: true,
                 title: {
                     display: true,
                     text: 'Amount, Price and Fuel Efficiency'
@@ -495,7 +501,7 @@ function allychart() {
         function checkreq(s) {
             if(s == 0) {
                 $("#a-req").css({ color: '#28a745' })
-                return "OPEN FOR EVERYONE"
+                return "IPO NOT REQUIRED"
             }
             $("#a-req").css({ color: '#fa3737' })
             return "$" + s + " REQUIRED"
@@ -518,6 +524,7 @@ function allychart() {
         let fData = []
         let dcData = []
         let cfData = []
+        let sData = []
         /*let jData = []
         let oData = []
         let svData = []*/
@@ -527,6 +534,7 @@ function allychart() {
             contData[counter] = d.contributed
             fData[counter] = [d.flights,d.company]
             dcData[counter] = [d.dailyContribution,d.company]
+            sData[counter] = [d.shareValue,d.company]
             if(d.contributed == 0) {
                 cfData[counter] = [0,d.company]
             } else {
@@ -534,7 +542,7 @@ function allychart() {
             }
             counter++
         }
-        //CHARTS
+        //BASIC CHARTS
         let m1BGC = ['rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)',
         'rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)',
         'rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)','rgba(0, 0, 255, .2)','rgba(0, 0, 255, 1)',
@@ -563,6 +571,7 @@ function allychart() {
                 ]
             },
             options: {
+                maintainAspectRatio: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -640,6 +649,7 @@ function allychart() {
                 ]
             },
             options: {
+                maintainAspectRatio: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -705,6 +715,7 @@ function allychart() {
                 ]
             },
             options: {
+                maintainAspectRatio: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -782,6 +793,7 @@ function allychart() {
                 ]
             },
             options: {
+                maintainAspectRatio: true,
                 tooltips: {
                     callbacks: {
                         label: function(tooltipItems, data) {
@@ -808,5 +820,41 @@ function allychart() {
                 }
             }
         })
+        //AVERAGES
+        let totalContri = 0
+        let av1C = 0
+        while(av1C < contData.length) {
+            totalContri += contData[av1C]
+            av1C++
+        }
+        $("#avC").text("$" + commaNumber(Math.floor(totalContri / contData.length)))
+        let totalCD = 0
+        let av2C = 0
+        while(av2C < dcData.length) {
+            totalCD += dcData[av2C][0]
+            av2C++
+        }
+        $("#avCD").text("$" + commaNumber(Math.floor(totalCD / dcData.length)))
+        let totalCF = 0
+        let av3C = 0
+        while(av3C < cfData.length) {
+            totalCF += cfData[av3C][0]
+            av3C++
+        }
+        $("#avCF").text("$" + Math.floor((totalCF / cfData.length) * 1000000) / 1000000)
+        let totalF = 0
+        let av4C = 0
+        while(av4C < fData.length) {
+            totalF += fData[av4C][0]
+            av4C++
+        }
+        $("#avF").text(commaNumber(Math.floor(totalF / fData.length)))
+        let totalSV = 0
+        let av5C = 0
+        while(av5C < sData.length) {
+            totalSV += sData[av5C][0]
+            av5C++
+        }
+        $("#avSV").text("$" + Math.floor((totalSV / sData.length) * 100) / 100)
     }
 }

@@ -23,8 +23,8 @@ function filterInput(obj) {
    let k
    while(i < 10) {
        k = v.charAt(i)
-       if(parseInt(k) == 1 || parseInt(k) == 2 || parseInt(k) == 3 || parseInt(k) == 4 || parseInt(k) == 5 || parseInt(k) == 6 || parseInt(k) == 7 || parseInt(k) == 8 || parseInt(k) == 9 || parseInt(k) == 0 || k == ".") {
-           z = z + k
+       if(parseInt(k) == 1 || parseInt(k) == 2 || parseInt(k) == 3 || parseInt(k) == 4 || parseInt(k) == 5 || parseInt(k) == 6 || parseInt(k) == 7 || parseInt(k) == 8 || parseInt(k) == 9 || parseInt(k) == 0) {
+          z = z + k
        }
        i++
    }
