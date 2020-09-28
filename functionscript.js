@@ -1,3 +1,8 @@
+var doesME = false
+var ME2 = false
+var rrrr
+var comparison1
+var comparison2
 var svC = new Chart(document.getElementById("p-svchart"), { type: ' line' })
 var fC1 = new Chart(document.getElementById("p-fleet1"), { type: 'line' })
 var fC2 = new Chart(document.getElementById("p-fleet2"), { type: 'line' })
@@ -6,6 +11,18 @@ var m1 = new Chart(document.getElementById("a-m1"), { type: 'line' })
 var m2 = new Chart(document.getElementById("a-m2"), { type: 'line' })
 var m3 = new Chart(document.getElementById("a-m3"), { type: 'line' })
 var m4 = new Chart(document.getElementById("a-m4"), { type: 'line' })
+var m5 = new Chart(document.getElementById("a-m5"), { type: 'line' })
+var m6 = new Chart(document.getElementById("a-m6"), { type: 'line' })
+var m7 = new Chart(document.getElementById("a-m7"), { type: 'line' })
+var v1 = new Chart(document.getElementById("v-1"), { type: 'line' })
+var v2 = new Chart(document.getElementById("v-2"), { type: 'line' })
+var v3 = new Chart(document.getElementById("v-3"), { type: 'line' })
+var v4 = new Chart(document.getElementById("v-4"), { type: 'line' })
+var t1 = new Chart(document.getElementById("a-t1"), { type: 'line' })
+var t2 = new Chart(document.getElementById("a-t2"), { type: 'line' })
+var t3 = new Chart(document.getElementById("a-t3"), { type: 'line' })
+var t4 = new Chart(document.getElementById("a-t4"), { type: 'line' })
+var t5 = new Chart(document.getElementById("a-t5"), { type: 'line' })
 $("#filter-icon").click(function() {
    $("#filter-res").animate({
       top: '40px'
@@ -87,6 +104,9 @@ function reversered() {
       boxShadow: 'initial'
    })
 }
+function commaNumber(x) {
+   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 function refreshChartSize() {
    let tableElement = document.getElementsByClassName("charttable")[0]
    let tableElementComputedV = window.getComputedStyle(tableElement)
@@ -94,6 +114,13 @@ function refreshChartSize() {
    $(".chart").css({
       maxWidth: chartWidthProperty
   })
+}
+function isPlaneValid(p) {
+   let a = acdb(p.toLowerCase())
+   if(a[0] == 0) {
+      return false
+   }
+   return true
 }
 //CARGO rework!
 function easyLarge(distance) {
@@ -139,6 +166,29 @@ var marketMin = document.getElementById("marketMin")
 marketMin.oninput = function() {
    document.getElementById("tr3").innerHTML = "Min. Market% --" + this.value + "%"
 }
+// var amtc = document.getElementById("amTCp")
+// amtc.oninput = function() {
+//    document.getElementById("ar1").innerHTML = "Planes to Compare: " + this.value
+//    if(this.value == 2) {
+//       $(".cmt3").hide()
+//       $(".cmt4").hide()
+//    } else if(this.value == 3) {
+//       $(".cmt3").show()
+//       $(".cmt4").hide()
+//    } else if(this.value == 4) {
+//       $(".cmt3").show()
+//       $(".cmt4").show()
+//    }
+// }
+function redCol() {
+   $(".form-control").css({
+      border: '#a1000b',
+      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
+   })
+}
+$(".tooltip").click(function() {
+   $(".tooltiptext").toggle()
+})
 //PAX MENU CONTROL
 $("#btn-pax1").click(function() {
    $(".tools").hide()
@@ -165,12 +215,6 @@ $("#btn-pax3").click(function() {
    $("#btn-pax1").removeClass("men-sel")
 })
 //PAXTICKET
-function redCol1() {
-   $(".cat1").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec1").click(function() {
    paxticket("r")
    $("#cat1-s1").css({
@@ -221,12 +265,6 @@ $("#pax-ret1").click(function() {
    $("#tool-pax1").show()
 })
 //PAXCONFIG
-function redCol2() {
-   $(".cat2").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec2").click(function() {
    paxseats("r","n")
    $("#cat2-s1").css({
@@ -333,12 +371,6 @@ $("#pax-ret2").click(function() {
    $("#tool-pax2").show()
 })
 //PAXPROFIT
-function redCol3() {
-   $(".cat3").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec3").click(function() {
    paxprofit("r")
    $("#cat3-s1").css({
@@ -414,12 +446,6 @@ $("#btn-car3").click(function() {
    $("#btn-car2").removeClass("men-sel")
 })
 //CARGOTICKET
-function redCol4() {
-   $(".cat4").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec4").click(function() {
    cticket("r")
    $("#cat4-s1").css({
@@ -470,12 +496,6 @@ $("#car-ret1").click(function() {
    $("#tool-car1").show()
 })
 //CARGOCONFIG
-function redCol5() {
-   $(".cat5").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec5").click(function() {
    cseats("n")
    $("#cat5-s1").css({
@@ -526,12 +546,6 @@ $("#car-ret2").click(function() {
    $("#tool-car2").show()
 })
 //CARGOPROFIT
-function redCol6() {
-   $(".cat6").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec6").click(function() {
    cprofit("r")
    $("#cat6-s1").css({
@@ -597,12 +611,6 @@ $("#btn-rts2").click(function() {
    $("#btn-rts1").removeClass("men-sel")
 })
 //STOPOVER
-function redCol7() {
-   $(".cat7").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec7").click(function() {
    searchstopover()
    stmap.invalidateSize()
@@ -612,12 +620,6 @@ $("#rts-ret1").click(function() {
    $("#tool-rts1").show()
 })
 //MARKETFIND
-function redCol8() {
-   $(".cat8").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec8").click(function() {
    mfind()
 })
@@ -632,6 +634,7 @@ $("#btn-oth1").click(function() {
    $("#tool-oth1").show()
    $("#btn-oth1").addClass("men-sel")
    $("#btn-oth2").removeClass("men-sel")
+   $("#btn-oth3").removeClass("men-sel")
 })
 $("#btn-oth2").click(function() {
    $(".tools").hide()
@@ -639,14 +642,17 @@ $("#btn-oth2").click(function() {
    $("#tool-oth2").show()
    $("#btn-oth2").addClass("men-sel")
    $("#btn-oth1").removeClass("men-sel")
+   $("#btn-oth3").removeClass("men-sel")
+})
+$("#btn-oth3").click(function() {
+   $(".tools").hide()
+   $(".tool-answer").hide()
+   $("#tool-oth3").show()
+   $("#btn-oth3").addClass("men-sel")
+   $("#btn-oth1").removeClass("men-sel")
+   $("#btn-oth2").removeClass("men-sel")
 })
 //AC SEARCH
-function redCol9() {
-   $(".cat9").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec9").click(function() {
    $(".plane-content").addClass("plane-hide")
    acsearch()
@@ -656,18 +662,62 @@ $("#oth-ret1").click(function() {
    $("#tool-oth1").show()
 })
 //RESELL
-function redCol10() {
-   $(".cat10").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec10").click(function() {
    resell()
 })
 $("#oth-ret2").click(function() {
    $("#ans-oth2").hide()
    $("#tool-oth2").show()
+})
+//COMPARISON
+$("#exec13").click(function() {
+   comparePlanes("r")
+   $("#cat13-s1").css({
+      backgroundColor: '#103de0',
+      borderColor: '#103de0',
+      boxShadow: '0 0 0 .2rem rgba(0,123,255,.25)',
+      zIndex: 2020
+   })
+   $("#cat13-s2").css({
+      backgroundColor: '#107fe0',
+      borderColor: '#107fe0',
+      boxShadow: 'none',
+      zIndex: 'initial'
+   })
+})
+$("#cat13-s1").click(function() {
+   comparePlanes("r")
+   $("#cat13-s1").css({
+      backgroundColor: '#103de0',
+      borderColor: '#103de0',
+      boxShadow: '0 0 0 .2rem rgba(0,123,255,.25)',
+      zIndex: 2020
+   })
+   $("#cat13-s2").css({
+      backgroundColor: '#107fe0',
+      borderColor: '#107fe0',
+      boxShadow: 'none',
+      zIndex: 'initial'
+   })
+})
+$("#cat13-s2").click(function() {
+   comparePlanes("e")
+   $("#cat13-s2").css({
+      backgroundColor: '#103de0',
+      borderColor: '#103de0',
+      boxShadow: '0 0 0 .2rem rgba(0,123,255,.25)',
+      zIndex: 2020
+   })
+   $("#cat13-s1").css({
+      backgroundColor: '#107fe0',
+      borderColor: '#107fe0',
+      boxShadow: 'none',
+      zIndex: 'initial'
+   })
+})
+$("#oth-ret3").click(function() {
+   $("#ans-oth3").hide()
+   $("#tool-oth3").show()
 })
 //CHART MENU CONTROL
 $("#btn-cha1").click(function() {
@@ -685,12 +735,6 @@ $("#btn-cha2").click(function() {
    $("#btn-cha1").removeClass("men-sel")
 })
 //PLAYERCHART
-function redCol11() {
-   $(".cat11").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec11").click(function() {
    playerchart()
 })
@@ -699,16 +743,17 @@ $("#cha-ret1").click(function() {
    $("#tool-cha1").show()
 })
 //ALLYCHART
-function redCol12() {
-   $(".cat12").css({
-      border: '#a1000b',
-      boxShadow: '0 0 0 .2rem rgba(225,83,97,.5)'
-   })
-}
 $("#exec12").click(function() {
    allychart()
 })
 $("#cha-ret2").click(function() {
    $("#ans-cha2").hide()
    $("#tool-cha2").show()
+})
+//Stuff
+$("#memberButton").click(function() {
+   displayMemberStats(rrrr)
+})
+$("#msBtn").click(function() {
+   compareMembers(rrrr)
 })

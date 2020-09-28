@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <meta charset="UTF-8">
+      <meta charset="UTF-8">  
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!--STYLESHEETS-->
       <link rel="stylesheet" href="index.css" type="text/css"></link>
@@ -187,7 +187,6 @@
                      <tr class="res-1">
                         <th id="seatPref"></th>
                      </tr>
-                     <!--PROFIT VERSION-->
                      <tr class="res-1">
                         <td class="tl">
                            <img src="https://www.airline4.net/assets/img/aircraft/configuration/economy_seat.png" class="fs-icon">
@@ -263,6 +262,7 @@
                      ><button class="swbtn2 ansbtn transition ab-right" id="cat3-s2">Easy</button>
                   </div>
                   <table>
+                     <tr class="uselesswidth"></tr>
                      <tr class="res-1">
                         <td class="tl">
                            <i class="fa fa-dollar-sign col-dol"></i> Profit/Flight
@@ -275,6 +275,7 @@
                         </td>
                         <td id="perDayProfit" class="tr"></td>
                      </tr>
+                     <tr class="uselesswidth"></tr>
                      <tr class="res-1">
                         <td class="tl" colspan="2">
                            Additional Info (per flight):
@@ -469,6 +470,7 @@
                      ><button class="swbtn2 ansbtn transition ab-right" id="cat6-s2">Easy</button>
                   </div>
                   <table>
+                     <tr class="uselesswidth"></tr>
                      <tr class="res-1">
                         <td class="tl">
                            <i class="fa fa-dollar-sign col-dol"></i> Profit/Flight
@@ -481,6 +483,7 @@
                         </td>
                         <td id="perDayProfitc" class="tr"></td>
                      </tr>
+                     <tr class="uselesswidth"></tr>
                      <tr class="res-1">
                         <td class="tl" colspan="2">
                            Additional Info (per flight):
@@ -641,6 +644,10 @@
                      <span class="fa fa-hand-holding-usd" data-dismiss="modal"></span>
                      Resell
                   </button>
+                  <button class="pop-btn baloo-f transition" id="btn-oth3">
+                     <i class="fa fa-balance-scale-right"></i>
+                     Comparison
+                  </button>
                </div>
             </div>
             <div class="modal-main">
@@ -666,21 +673,22 @@
                <div id="tool-oth2" class="tools">
                   <h4>Resell Value Calculator</h4>    
                   <label for="airplaneResell">Aircraft Type</label>
-                  <input list="acList" type="text" id="airplaneResell" placeholder="Aircraft Type" class="form-control"><br>
+                  <input list="acList" type="text" id="airplaneResell" placeholder="Aircraft Type" class="form-control cat10"><br>
                   <label for="marketPercentResell">Market%</label>
-                  <input type="text" id="marketPercentResell" placeholder="Market Percent" maxlength="2" class="form-control" oninput="filterInput(this)"><br>
+                  <input type="text" id="marketPercentResell" placeholder="Market Percent" maxlength="2" class="form-control cat10" oninput="filterInput(this)"><br>
                   <label for="jSeatsResell">J-Class Seats</label>
-                  <input type="text" id="jSeatsResell" placeholder="J-Class Seats" maxlength="3" class="form-control" oninput="filterInput(this)"><br>
+                  <input type="text" id="jSeatsResell" placeholder="J-Class Seats" maxlength="3" class="form-control cat10" oninput="filterInput(this)"><br>
                   <label for="fSeatsResell">F-Class Seats</label>
-                  <input type="text" id="fSeatsResell" placeholder="F-Class Seats" maxlength="4" class="form-control" oninput="filterInput(this)"><br>
+                  <input type="text" id="fSeatsResell" placeholder="F-Class Seats" maxlength="4" class="form-control cat10" oninput="filterInput(this)"><br>
                   <label for="hoursResell">Flight Hours</label>
-                  <input type="text" id="hoursResell" placeholder="Flight Hours" maxlength="5" class="form-control" oninput="filterInput(this)"><br>
+                  <input type="text" id="hoursResell" placeholder="Flight Hours" maxlength="5" class="form-control cat10" oninput="filterInput(this)"><br>
                   <button class="toolbtn margin-down" id="exec10">Calculate!</button>
                </div>
                <div id="ans-oth2" class="tool-answer margin-down">
                   <button class="returnbtn" id="oth-ret2">
                      <i class="fa fa-long-arrow-alt-left"></i>  Return
                   </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
                   <table>
                      <tr class="res-1">
                         <td class="tl">
@@ -689,6 +697,44 @@
                         <td id="resellV" class="tr"></td>
                      </tr>
                   </table>
+               </div>
+               <!--COMPARISON-->
+               <div id="tool-oth3" class="tools">
+                  <h4>Compare Planes</h4>
+                  <!-- <label for="amTCp" id="ar1">Planes to Compare: 2</label><br>
+                  <input type="range" id="amTCp" min="2" max="4" value="2" class="slider"><br> -->
+                  <label for="cmp1">Aircraft Type</label>
+                  <input list="acList" type="text" id="cmp1" placeholder="Aircraft Type" class="form-control cat13"><br>
+                  <label for="cmp2">Aircraft Type</label>
+                  <input list="acList" type="text" id="cmp2" placeholder="Aircraft Type" class="form-control cat13"><br>
+                  <!-- <label for="cmp3" class="cmt3">Aircraft Type</label>
+                  <input list="acList" type="text" id="cmp3" placeholder="Aircraft Type" class="form-control cat13 cmt3"><br class="cmt3">
+                  <label for="cmp4" class="cmt4">Aircraft Type</label>
+                  <input list="acList" type="text" id="cmp4" placeholder="Aircraft Type" class="form-control cat13 cmt4"><br class="cmt4"> -->
+                  <button class="toolbtn margin-down" id="exec13">Calculate!</button>
+               </div>
+               <div id="ans-oth3" class="tool-answer margin-down">
+                  <button class="returnbtn" id="oth-ret3">
+                     <i class="fa fa-long-arrow-alt-left"></i>  Return
+                  </button><br>
+                  <span class="baloo-f result-sign">RESULT</span>
+                  <div class="btn-group" style="margin-top: 10px; margin-bottom: 15px">
+                     <button class="swbtn1 ansbtn transition ab-left actv" id="cat13-s1">Realism</button
+                     ><button class="swbtn2 ansbtn transition ab-right" id="cat13-s2">Easy</button>
+                  </div>
+                  <div class="tooltip">
+                     <i class="fa fa-info-circle tooltip-icon"></i>
+                     Comparison Notes
+                     <span class="tooltiptext">
+                        The planes are compared by calculating the stats from a imaginary 8h-route; the range of the planes will be ignored.
+                        <ul>
+                           <li>Fuel Price: $500</li>
+                           <li>CO2 Price: $120</li>
+                           <li>Maintenance Cost Included</li>
+                        </ul>
+                     </span>
+                  </div>
+                  <div id="pc-maincont"></div>
                </div>
             </div>
          </div>
@@ -759,8 +805,11 @@
                      </div>
                      <div class="share-info baloo-f bb">
                         <h3>SHARE VALUE</h3>
-                        <div class="ccont">
-                           <canvas class="chart" id="p-svchart"></canvas>
+                        <h2 id="sv-g"></h2>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="p-svchart"></canvas>
+                           </div>
                         </div>
                         <table class="charttable">
                            <tr>
@@ -776,14 +825,20 @@
                      <div class="fleet-info baloo-f bb">
                         <h3>FLEET</h3>
                         <div id="p-fleetinfo"></div>
-                        <div class="ccont">
-                           <canvas class="chart" id="p-fleet1"></canvas><br>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="p-fleet1"></canvas>
+                           </div>
                         </div>
-                        <div class="ccont">
-                           <canvas class="chart" id="p-fleet2"></canvas><br>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="p-fleet2"></canvas>
+                           </div>
                         </div>
-                        <div class="ccont">
-                           <canvas class="chart" id="p-fleet3"></canvas><br>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="p-fleet3"></canvas>
+                           </div>
                         </div>
                      </div>
                      <div class="award-info baloo-f bb">
@@ -817,6 +872,7 @@
                      </div>
                   </div>
                </div>
+               <!--ALLIANCE-->
                <div id="tool-cha2" class="tools">
                   <h4>Alliance Statistics</h4>
                   <label for="allyName-a">Alliance</label>
@@ -860,18 +916,200 @@
                         </table>
                      </div>
                      <div class="member-info baloo-f bb">
+                        <h3>INFO</h3>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m1"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m2"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m3"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m4"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m5"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m6"></canvas>
+                           </div>
+                        </div>
+                        <div class="cont-cont">
+                           <div class="ccont">
+                              <canvas class="chart" id="a-m7"></canvas>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="top-info baloo-f bb">
+                        <h3>TOP 5</h3>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="a-t1"></canvas>
+                           </div>
+                        </div>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="a-t2"></canvas>
+                           </div>
+                        </div>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="a-t3"></canvas>
+                           </div>
+                        </div>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="a-t4"></canvas>
+                           </div>
+                        </div>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="a-t5"></canvas>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="list-info baloo-f">
+                        <h3>MEMBER SEARCH</h3>
+                        <div id="memberCont">
+                           <input type="text" id="memberSearch" placeholder="Search..." list="memberList">
+                           <button id="memberButton">
+                              <i class="fa fa-search"></i>
+                           </button>
+                        </div>
+                        <datalist id="memberList"></datalist>
+                     </div>
+                     <div class="stats-info baloo-f bb">
                         <h3>MEMBER INFO</h3>
-                        <div class="ccont">
-                           <canvas class="chart" id="a-m1"></canvas>
+                        <table class="charttable">
+                           <tr>
+                              <td class="tl">Contribution</td>
+                              <td class="tr" id="mmC"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Cont./Day</td>
+                              <td class="tr" id="mmCD"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Cont./Flight</td>
+                              <td class="tr" id="mmCF"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Flights</td>
+                              <td class="tr" id="mmF"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Share Value</td>
+                              <td class="tr" id="mmSV"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Joined</td>
+                              <td class="tr" id="mmJ"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Last Online</td>
+                              <td class="tr" id="mmO"></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="vs-info baloo-f">
+                        <h3>COMPARE MEMBERS</h3>
+                        <input type="text" id="memberOne" placeholder="Member 1" class="form-control-ulw" list="memberList"><br>
+                        <input type="text" id="memberTwo" placeholder="Member 2" class="form-control-ulw" list="memberList"><br>
+                        <button class="msbtn" id="msBtn"><i class="fa fa-search"></i> Show Info</button>
+                     </div>
+                     <div class="compare-info baloo-f bb">
+                        <h3>COMPARISON RESULT</h3>
+                        <table class="charttable">
+                           <tr>
+                              <th class="tl" id="compM1"></th>
+                              <th class="tr" id="compM2"></th>
+                           </tr>
+                           <tr class="uselesswidth"></tr>
+                           <tr>
+                              <td class="tl">Contribution</td>
+                              <td class="tr">Contribution</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="va1"></td>
+                              <td class="tr" id="va2"></td>
+                           </tr>
+                           <tr class="uselesswidth"></tr>
+                           <tr>
+                              <td class="tl">Cont./Day</td>
+                              <td class="tr">Cont./Day</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="vb1"></td>
+                              <td class="tr" id="vb2"></td>
+                           </tr>
+                           <tr class="uselesswidth"></tr>
+                           <tr>
+                              <td class="tl">Flights</td>
+                              <td class="tr">Flights</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="vc1"></td>
+                              <td class="tr" id="vc2"></td>
+                           </tr>
+                           <tr class="uselesswidth"></tr>
+                           <tr>
+                              <td class="tl">Cont./Flight</td>
+                              <td class="tr">Cont./Flight</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="vd1"></td>
+                              <td class="tr" id="vd2"></td>
+                           </tr>
+                           <tr class="uselesswidth"></tr>
+                           <tr>
+                              <td class="tl">Joined</td>
+                              <td class="tr">Joined</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="ve1"></td>
+                              <td class="tr" id="ve2"></td>
+                           </tr>
+                           <tr>
+                              <td class="tl">Online</td>
+                              <td class="tr">Online</td>
+                           </tr>
+                           <tr>
+                              <td class="tl" id="vf1"></td>
+                              <td class="tr" id="vf2"></td>
+                           </tr>
+                        </table>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="v-1"></canvas>
+                           </div>
                         </div>
-                        <div class="ccont">
-                           <canvas class="chart" id="a-m2"></canvas>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="v-2"></canvas>
+                           </div>
                         </div>
-                        <div class="ccont">
-                           <canvas class="chart" id="a-m3"></canvas>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="v-3"></canvas>
+                           </div>
                         </div>
-                        <div class="ccont">
-                           <canvas class="chart" id="a-m4"></canvas>
+                        <div class="disa-cont">
+                           <div class="no-ccont">
+                              <canvas class="nowidth-chart" id="v-4"></canvas>
+                           </div>
                         </div>
                      </div>
                   </div>

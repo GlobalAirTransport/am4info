@@ -57,15 +57,8 @@ function paxprofit(gamemode) {
         var rev = jBoard * jp + yBoard * yp + fBoard * fp
         var profitF = rev - fuelExp - coExp - mExpFlight
         var profitD = profitF * flpd
-
-        function commaNumber(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
         document.getElementById("perFlightProfit").innerHTML = "$" + commaNumber(profitF)
-
         document.getElementById("perDayProfit").innerHTML = "$" + commaNumber(profitD)
-
         var fuelAmount = Math.floor(fuelC * dist)
         var co2Amount = Math.floor(coC * (yBoard + jBoard * 2 + fBoard * 3) * dist)
         $('#fuelUsageProfit')[0].innerHTML = commaNumber(fuelAmount) + "lbs"
@@ -77,8 +70,8 @@ function paxprofit(gamemode) {
         $("#tool-pax3").hide()
         $("#ans-pax3").show()
     } else {
-         alertBox("Please fill in all fields correctly!","#fa3737")
-         redCol3()
+        alertBox("Please fill in all fields correctly and enter a valid plane name!","#fa3737")
+        redCol()
     }
 }
 //STOPOVER
@@ -128,8 +121,8 @@ while(mainr1 < 3) {
     mainr1++
 }
 function dbaccess(name) {
-        var lat, lon, m, c, n, ia, ic, r
-        switch(name) {
+    var lat, lon, m, c, n, ia, ic, r
+    switch(name) {
     case "id1":	case "HIR": case "AGGH": lat = -9.428000450; lon = 160.0549927; m = 55; ia = "HIR"; ic = "AGGH"; r = 7218; c = "Solomon Islands"; n = "Honiara"; break;            
     case "id2":	case "MUA": case "AGGM": lat = -8.327969551; lon = 157.2630005; m = 69; ia = "MUA"; ic = "AGGM"; r = 4593; c = "Solomon Islands"; n = "Munda"; break;
 
@@ -4307,17 +4300,17 @@ function dbaccess(name) {
 
     default: lat = 0; lon = 0; m = 0; ia = "N/A"; ic = "N/A"; r = 0; c = "N/A"; n = "N/A"; break;
 
-        }
-        let arr = new Array()
-        arr[1] = lat
-        arr[2] = lon
-        arr[3] = m
-        arr[4] = c
-        arr[5] = n
-        arr[6] = ia
-        arr[7] = ic
-        arr[8] = r
-        return arr
+    }
+    let arr = new Array()
+    arr[1] = lat
+    arr[2] = lon
+    arr[3] = m
+    arr[4] = c
+    arr[5] = n
+    arr[6] = ia
+    arr[7] = ic
+    arr[8] = r
+    return arr
 }
 var stmap = L.map('stopover-map', {
     zoomControl:false,
@@ -4339,13 +4332,10 @@ var mk3
 function searchstopover() {
     function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
         var earthRadiusKm = 6371;
-      
         var dLat = degreesToRadians(lat2-lat1);
         var dLon = degreesToRadians(lon2-lon1);
-      
         lat1 = degreesToRadians(lat1);
         lat2 = degreesToRadians(lat2);
-      
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
@@ -12297,7 +12287,7 @@ function searchstopover() {
         }
     } else  {
         alertBox("Please fill in all fields correctly!","#fa3737")
-        redCol7()
+        redCol()
     }
 }
 //MARKET FIND
@@ -12305,19 +12295,16 @@ function mfind() {
     let depN = document.getElementById("marketDeparture").value
     if(depN == "") {
         alertBox("The departure airport wasn't found.","#fa3737")
-        redCol8()
+        redCol()
         return
     }
     let marketNeed = document.getElementById("marketMin").value
     function findDist(lat1, lon1, lat2, lon2) {
         var earthRadiusKm = 6371;
-      
         var dLat = degreesToRadians(lat2-lat1);
         var dLon = degreesToRadians(lon2-lon1);
-      
         lat1 = degreesToRadians(lat1);
         lat2 = degreesToRadians(lat2);
-      
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
@@ -16289,7 +16276,7 @@ function acsearch() {
     let r = document.getElementById("minrange").value
     if(s == "" && cc == "" && p == "" && r == "") {
         alertBox("You have to select at least one filter!","#fa3737")
-        redCol9()
+        redCol()
         return
     }
     if(s == "") {
@@ -16311,9 +16298,6 @@ function acsearch() {
     let jk
     let createElement
     let countarr = []
-    function commaNumber(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
     while(j < 330) {
         jk = "id" + j
         switch(jk) {
@@ -18279,10 +18263,9 @@ function resell() {
     jS = document.getElementById("jSeatsResell").value;
     fS = document.getElementById("fSeatsResell").value;
     flh = document.getElementById("hoursResell").value;
-
     if (plane == "" || market == "" || flh == "" || jS == "" || fS == "") {
         alertBox("Please fill in all fields correctly!","#fa3737")
-        redCol10()
+        redCol()
     } else {
         jS = parseInt(jS)
         fS = parseInt(fS)
@@ -18291,9 +18274,6 @@ function resell() {
         resell = Math.round((finalCost - flh * 2500) * marketCalc);
         if (resell<finalCost * 0.1) {
          resell = Math.round(finalCost * 0.1 * (market / 100));
-        }
-        function commaNumber(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
         document.getElementById("resellV").innerHTML = "$" + commaNumber(resell)
         $(".tool-answer").hide()
@@ -21919,7 +21899,7 @@ function acdb(acn) {
         case "73-1 ":
         case "731 ":
         case "id58":
-        speed = 796; cap = 118; rwy = 7550; mC = 386248; range = 3440; fConsmp = 12.12; cConsm0 = 0.15; mH = 360; price = 1514699;
+        speed = 796; cap = 118; rwy = 7550; mC = 386248; range = 3440; fConsmp = 12.12; cConsmp = 0.15; mH = 360; price = 1514699;
         n = "B737-100"; c = 5; pc = "737"
         break;
         

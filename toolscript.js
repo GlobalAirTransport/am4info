@@ -15,7 +15,7 @@ function paxticket(m) {
         $("#ans-pax1").show()
     } else {
         alertBox('Please fill in the flight distance!', '#fa3737')
-        redCol1()
+        redCol()
     }
 }
 function paxseats(gamemode, calcmode) {
@@ -119,9 +119,6 @@ function paxseats(gamemode, calcmode) {
         prefDem = prefDem + (p * flpd)
         secDem = secDem + (s * flpd)
         lastDem = lastDem + (l * flpd)
-        console.log(prefDem)
-        console.log(secDem)
-        console.log(lastDem)
         prefS = Math.floor(prefDem / flpd)
         if(prefS * prefM >= cap) {
             prefS = Math.floor(cap / prefM)
@@ -229,7 +226,7 @@ function paxseats(gamemode, calcmode) {
         $("#ans-pax2").show()
     } else {
         alertBox("Please fill in all fields correctly!", "#fa3737")
-        redCol2()
+        redCol()
     }
 }
 function cticket(m) {
@@ -258,10 +255,9 @@ function cticket(m) {
         $("#tool-car1").hide()
         $("#ans-car1").show()
     } else {
-        redCol4()
+        redCol()
         alertBox("Please fill in the flight distance!","#fa3737")
     }
-    
 }
 function cseats(calcmode) {
     var cap = document.getElementById("capacityLoad").value
@@ -358,7 +354,7 @@ function cseats(calcmode) {
         $("#ans-car2").show()
     } else {
         alertBox("Please fill in all fields correctly!","#fa3737")
-        redCol5()
+        redCol()
     }
 }
 function cprofit(gamemode) {
@@ -517,9 +513,6 @@ function cprofit(gamemode) {
             var lp = Math.floor(((0.85 + dist * 7 / 9000) * 1.1) * 100) / 100
             var hp = Math.floor(((0.28 + dist / 1450) * 1.08) * 100) / 100
         }
-        function commaNumber(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
         var lBoard = Math.floor(lL * ((rep - 5) / 100))
         var hBoard = Math.floor(hL * ((rep - 5) / 100))
         var fuelExp = Math.floor(fuelC * dist * (fP / 1000))
@@ -542,7 +535,554 @@ function cprofit(gamemode) {
         $("#tool-car3").hide()
         $("#ans-car3").show()
     } else {
-        alertBox("Please fill in all fields!","#fa3737")
-        redCol6()
+        alertBox("Please fill in all fields and enter a valid plane name!","#fa3737")
+        redCol()
     }
+}
+function comparePlanes(gamemode) {
+    function r(pn, ret) {
+        let speed; let cap; let rwy; let range; let mC; let fConsmp; let cConsmp; let mH; let price; let n; let c; let pct
+        let ac = acdb(pn)
+        speed = ac[0]
+        cap = ac[1]
+        rwy = ac[2]
+        mC = ac[3]
+        range = ac[4]
+        fConsmp = ac[5]
+        cConsmp = ac[6]
+        mH = ac[7]
+        price = ac[8]
+        n = ac[9]
+        c = ac[10]
+        pct = ac[11]
+        let distance = speed * 8
+        let ticket = realY(distance)
+        let onb = cap * 0.85
+        let coFactor = onb
+        let fExp = Math.floor(fConsmp * distance * 0.5)
+        let cExp = Math.floor(cConsmp * coFactor * distance * 0.12)
+        let mExp = Math.floor((mC / mH) * 8)
+        let rev = onb * ticket
+        let prf = rev - fExp - cExp - mExp
+        switch(ret) {
+            case 1:
+                return [distance + "km", distance]
+            case 2:
+                return [commaNumber(Math.floor(fConsmp * distance)) + "lbs", Math.floor(fConsmp * distance)]
+            case 3:
+                return ["$" + commaNumber(fExp), fExp]
+            case 4:
+                return [commaNumber(Math.floor(cConsmp * coFactor * distance)), Math.floor(cConsmp * coFactor * distance)]
+            case 5:
+                return ["$" + commaNumber(cExp), cExp]
+            case 6:
+                return ["$" + commaNumber(mExp), mExp]
+            case 7:
+                return ["$" + commaNumber(Math.round(rev)), rev]
+            case 8:
+                return ["$" + commaNumber(Math.round(prf)), prf]
+            case 9:
+                return ["$" + commaNumber(Math.round(prf * 3)), prf * 3]
+            case 10:
+                return n
+            case 11:
+                return "AC images/" +  pct + ".png"
+            default:
+                return "N/A"
+        }
+    }
+    function e(pn, ret) {
+        let speed; let cap; let rwy; let range; let mC; let fConsmp; let cConsmp; let mH; let price; let n; let c; let pct
+        let ac = acdb(pn)
+        speed = ac[0]
+        cap = ac[1]
+        rwy = ac[2]
+        mC = ac[3]
+        range = ac[4]
+        fConsmp = ac[5]
+        cConsmp = ac[6]
+        mH = ac[7]
+        price = ac[8]
+        n = ac[9]
+        c = ac[10]
+        pct = ac[11]
+        let distance = speed * 12
+        let ticket = easyY(distance)
+        let onb = cap * 0.85
+        let coFactor = onb
+        let fExp = Math.floor(fConsmp * distance * 0.5)
+        let cExp = Math.floor(cConsmp * coFactor * distance * 0.12)
+        let mExp = Math.floor(((mC / 2) / mH) * 12)
+        let rev = onb * ticket
+        let prf = rev - fExp - cExp - mExp
+        switch(ret) {
+            case 1:
+                return [distance + "km", distance]
+            case 2:
+                return [commaNumber(Math.floor(fConsmp * distance)) + "lbs", Math.floor(fConsmp * distance)]
+            case 3:
+                return ["$" + commaNumber(fExp), fExp]
+            case 4:
+                return [commaNumber(Math.floor(cConsmp * coFactor * distance)), Math.floor(cConsmp * coFactor * distance)]
+            case 5:
+                return ["$" + commaNumber(cExp), cExp]
+            case 6:
+                return ["$" + commaNumber(mExp), mExp]
+            case 7:
+                return ["$" + commaNumber(Math.round(rev)), rev]
+            case 8:
+                return ["$" + commaNumber(Math.round(prf)), prf]
+            case 9:
+                return ["$" + commaNumber(Math.round(prf * 3)), prf * 3]
+            case 10:
+                return [n]
+            case 11:
+                return ["AC images/" +  pct + ".png"]
+            default:
+                return "N/A"
+        }
+    }
+    let a = document.getElementById("cmp1").value
+    let b = document.getElementById("cmp2").value
+    if(!isPlaneValid(a) || !isPlaneValid(b)) {
+        alertBox("One of the planes you mentioned doesn't exist.","#fa3737")
+        redCol()
+        return
+    } else {
+        $(".tool-answer").hide()
+        $("#tool-oth3").hide()
+        $("#ans-oth3").show()
+        $("#pc-maincont").empty()
+        if(gamemode == "r") {
+            //plane1
+            $("#pc-maincont").append(`
+                <div class="plane-content">
+                   <div class="plane-image-smallscreen">
+                      <img src="${r(a.toLowerCase(), 11)}" class="plane-smallscreen">
+                   </div>
+                   <div class="plane-image-container">
+                      <img src="${r(a.toLowerCase(), 11)}" class="plane-image">
+                   </div>
+                   <div class="plane-maininfo">
+                      <div class="plane-maininfo2">
+                         <div class="plane-col1">
+                            <b>${r(a.toLowerCase(), 10)}</b><br>
+                            <span class="plane-text">${acdb(a.toLowerCase())[4]} km / ${acdb(a.toLowerCase())[0]} kph / ${acdb(a.toLowerCase())[1]} pax / ${acdb(a.toLowerCase())[5]} lbs/km</span>
+                         </div>
+                         <div class="plane-col2">
+                            <b>Cost</b><br>
+                            <b class="plane-price">$${commaNumber(acdb(a.toLowerCase())[8])}</b>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div id="pc-table1">
+                   <table class="pc-table">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
+                         </td>
+                         <td class="tr" id="pc-t1-c1"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Usage
+                         </td>
+                         <td class="tr" id="pc-t1-c2"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Cost
+                         </td>
+                         <td class="tr" id="pc-t1-c3"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                         </td>
+                         <td class="tr" id="pc-t1-c4"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                         </td>
+                         <td class="tr" id="pc-t1-c5"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-ccc"></i> Maintenance
+                         </td>
+                         <td class="tr" id="pc-t1-c6"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Revenue
+                         </td>
+                         <td class="tr" id="pc-t1-c7"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Profit
+                         </td>
+                         <td class="tr" id="pc-t1-c8"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <t class="fa fa-dollar col-dol"></t> Profit/Day
+                         </td>
+                         <td class="tr" id="pc-t1-c9"></td>
+                      </tr>
+                   </table>
+                </div>
+                <button class="pc-stbtn" onclick="$('#pc-table1').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
+            $("#pc-t1-c1").text(r(a.toLowerCase(), 1)[0])
+            $("#pc-t1-c2").text(r(a.toLowerCase(), 2)[0])
+            $("#pc-t1-c3").text(r(a.toLowerCase(), 3)[0])
+            $("#pc-t1-c4").text(r(a.toLowerCase(), 4)[0])
+            $("#pc-t1-c5").text(r(a.toLowerCase(), 5)[0])
+            $("#pc-t1-c6").text(r(a.toLowerCase(), 6)[0])  
+            $("#pc-t1-c7").text(r(a.toLowerCase(), 7)[0])
+            $("#pc-t1-c8").text(r(a.toLowerCase(), 8)[0])
+            $("#pc-t1-c9").text(r(a.toLowerCase(), 9)[0])
+            //plane2
+            $("#pc-maincont").append(`
+                <div class="plane-content">
+                   <div class="plane-image-smallscreen">
+                      <img src="${r(b.toLowerCase(), 11)}" class="plane-smallscreen">
+                   </div>
+                   <div class="plane-image-container">
+                      <img src="${r(b.toLowerCase(), 11)}" class="plane-image">
+                   </div>
+                   <div class="plane-maininfo">
+                      <div class="plane-maininfo2">
+                         <div class="plane-col1">
+                            <b>${r(b.toLowerCase(), 10)}</b><br>
+                            <span class="plane-text">${acdb(b.toLowerCase())[4]} km / ${acdb(b.toLowerCase())[0]} kph / ${acdb(b.toLowerCase())[1]} pax / ${acdb(b.toLowerCase())[5]} lbs/km</span>
+                         </div>
+                         <div class="plane-col2">
+                            <b>Cost</b><br>
+                            <b class="plane-price">$${commaNumber(acdb(b.toLowerCase())[8])}</b>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div id="pc-table2">
+                   <table class="pc-table">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
+                         </td>
+                         <td class="tr" id="pc-t2-c1"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Usage
+                         </td>
+                         <td class="tr" id="pc-t2-c2"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Cost
+                         </td>
+                         <td class="tr" id="pc-t2-c3"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                         </td>
+                         <td class="tr" id="pc-t2-c4"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                         </td>
+                         <td class="tr" id="pc-t2-c5"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-ccc"></i> Maintenance
+                         </td>
+                         <td class="tr" id="pc-t2-c6"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Revenue
+                         </td>
+                         <td class="tr" id="pc-t2-c7"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Profit
+                         </td>
+                         <td class="tr" id="pc-t2-c8"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <t class="fa fa-dollar col-dol"></t> Profit/Day
+                         </td>
+                         <td class="tr" id="pc-t2-c9"></td>
+                      </tr>
+                   </table>
+                </div>
+                <button class="pc-stbtn" onclick="$('#pc-table2').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
+            let arr = []
+            arr[0] = [(r(a.toLowerCase(), 1)[1] - r(b.toLowerCase(), 1)[1])]
+            arr[0][1] = arr[0][0].toString().charAt(0)
+            arr[0][2] = (arr[0][1] == "-") ? "+" : "-"
+            arr[1] = [(r(a.toLowerCase(), 2)[1] - r(b.toLowerCase(), 2)[1])]
+            arr[1][1] = arr[1][0].toString().charAt(0)
+            arr[1][2] = (arr[1][1] == "-") ? "+" : "-"
+            arr[2] = [(r(a.toLowerCase(), 3)[1] - r(b.toLowerCase(), 3)[1])]
+            arr[2][1] = arr[2][0].toString().charAt(0)
+            arr[2][2] = (arr[2][1] == "-") ? "+" : "-"
+            arr[3] = [(r(a.toLowerCase(), 4)[1] - r(b.toLowerCase(), 4)[1])]
+            arr[3][1] = arr[3][0].toString().charAt(0)
+            arr[3][2] = (arr[3][1] == "-") ? "+" : "-"
+            arr[4] = [(r(a.toLowerCase(), 5)[1] - r(b.toLowerCase(), 5)[1])]
+            arr[4][1] = arr[4][0].toString().charAt(0)
+            arr[4][2] = (arr[4][1] == "-") ? "+" : "-"
+            arr[5] = [(r(a.toLowerCase(), 6)[1] - r(b.toLowerCase(), 6)[1])]
+            arr[5][1] = arr[5][0].toString().charAt(0)
+            arr[5][2] = (arr[5][1] == "-") ? "+" : "-"
+            arr[6] = [(r(a.toLowerCase(), 7)[1] - r(b.toLowerCase(), 7)[1])]
+            arr[6][1] = arr[6][0].toString().charAt(0)
+            arr[6][2] = (arr[6][1] == "-") ? "+" : "-"
+            arr[7] = [(r(a.toLowerCase(), 8)[1] - r(b.toLowerCase(), 8)[1])]
+            arr[7][1] = arr[7][0].toString().charAt(0)
+            arr[7][2] = (arr[7][1] == "-") ? "+" : "-"
+            arr[8] = [(r(a.toLowerCase(), 9)[1] - r(b.toLowerCase(), 9)[1])]
+            arr[8][1] = arr[8][0].toString().charAt(0)
+            arr[8][2] = (arr[8][1] == "-") ? "+" : "-"
+            $("#pc-t2-c1").text(`${arr[0][2]} ${Math.round(Math.abs(arr[0][0]))}km`).css({ color: (($("#pc-t2-c1").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c2").text(`${arr[1][2]} ${commaNumber(Math.round(Math.abs(arr[1][0])))}lbs`).css({ color: (($("#pc-t2-c2").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c3").text(`${arr[2][2]} $${commaNumber(Math.round(Math.abs(arr[2][0])))}`).css({ color: (($("#pc-t2-c3").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c4").text(`${arr[3][2]} ${commaNumber(Math.round(Math.abs(arr[3][0])))}`).css({ color: (($("#pc-t2-c4").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c5").text(`${arr[4][2]} $${commaNumber(Math.round(Math.abs(arr[4][0])))}`).css({ color: (($("#pc-t2-c5").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c6").text(`${arr[5][2]} $${commaNumber(Math.round(Math.abs(arr[5][0])))}`).css({ color: (($("#pc-t2-c6").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c7").text(`${arr[6][2]} $${commaNumber(Math.round(Math.abs(arr[6][0])))}`).css({ color: (($("#pc-t2-c7").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c8").text(`${arr[7][2]} $${commaNumber(Math.round(Math.abs(arr[7][0])))}`).css({ color: (($("#pc-t2-c8").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c9").text(`${arr[8][2]} $${commaNumber(Math.round(Math.abs(arr[8][0])))}`).css({ color: (($("#pc-t2-c9").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+        } else if(gamemode =="e") {
+            //plane1
+            $("#pc-maincont").append(`
+                <div class="plane-content">
+                   <div class="plane-image-smallscreen">
+                      <img src="${e(a.toLowerCase(), 11)}" class="plane-smallscreen">
+                   </div>
+                   <div class="plane-image-container">
+                      <img src="${e(a.toLowerCase(), 11)}" class="plane-image">
+                   </div>
+                   <div class="plane-maininfo">
+                      <div class="plane-maininfo2">
+                         <div class="plane-col1">
+                            <b>${e(a.toLowerCase(), 10)}</b><br>
+                            <span class="plane-text">${acdb(a.toLowerCase())[4]} km / ${acdb(a.toLowerCase())[0]} kph / ${acdb(a.toLowerCase())[1]} pax / ${acdb(a.toLowerCase())[5]} lbs/km</span>
+                         </div>
+                         <div class="plane-col2">
+                            <b>Cost</b><br>
+                            <b class="plane-price">$${commaNumber(acdb(a.toLowerCase())[8])}</b>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div id="pc-table1">
+                   <table class="pc-table">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
+                         </td>
+                         <td class="tr" id="pc-t1-c1"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Usage
+                         </td>
+                         <td class="tr" id="pc-t1-c2"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Cost
+                         </td>
+                         <td class="tr" id="pc-t1-c3"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                         </td>
+                         <td class="tr" id="pc-t1-c4"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                         </td>
+                         <td class="tr" id="pc-t1-c5"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-ccc"></i> Maintenance
+                         </td>
+                         <td class="tr" id="pc-t1-c6"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Revenue
+                         </td>
+                         <td class="tr" id="pc-t1-c7"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Profit
+                         </td>
+                         <td class="tr" id="pc-t1-c8"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <t class="fa fa-dollar col-dol"></t> Profit/Day
+                         </td>
+                         <td class="tr" id="pc-t1-c9"></td>
+                      </tr>
+                   </table>
+                </div>
+                <button class="pc-stbtn" onclick="$('#pc-table1').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
+            $("#pc-t1-c1").text(e(a.toLowerCase(), 1)[0])
+            $("#pc-t1-c2").text(e(a.toLowerCase(), 2)[0])
+            $("#pc-t1-c3").text(e(a.toLowerCase(), 3)[0])
+            $("#pc-t1-c4").text(e(a.toLowerCase(), 4)[0])
+            $("#pc-t1-c5").text(e(a.toLowerCase(), 5)[0])
+            $("#pc-t1-c6").text(e(a.toLowerCase(), 6)[0])  
+            $("#pc-t1-c7").text(e(a.toLowerCase(), 7)[0])
+            $("#pc-t1-c8").text(e(a.toLowerCase(), 8)[0])
+            $("#pc-t1-c9").text(e(a.toLowerCase(), 9)[0])
+            //plane2
+            $("#pc-maincont").append(`
+                <div class="plane-content">
+                   <div class="plane-image-smallscreen">
+                      <img src="${e(b.toLowerCase(), 11)}" class="plane-smallscreen">
+                   </div>
+                   <div class="plane-image-container">
+                      <img src="${e(b.toLowerCase(), 11)}" class="plane-image">
+                   </div>
+                   <div class="plane-maininfo">
+                      <div class="plane-maininfo2">
+                         <div class="plane-col1">
+                            <b>${e(b.toLowerCase(), 10)}</b><br>
+                            <span class="plane-text">${acdb(b.toLowerCase())[4]} km / ${acdb(b.toLowerCase())[0]} kph / ${acdb(b.toLowerCase())[1]} pax / ${acdb(b.toLowerCase())[5]} lbs/km</span>
+                         </div>
+                         <div class="plane-col2">
+                            <b>Cost</b><br>
+                            <b class="plane-price">$${commaNumber(acdb(b.toLowerCase())[8])}</b>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div id="pc-table2">
+                   <table class="pc-table">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
+                         </td>
+                         <td class="tr" id="pc-t2-c1"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Usage
+                         </td>
+                         <td class="tr" id="pc-t2-c2"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint col-000"></i> Fuel Cost
+                         </td>
+                         <td class="tr" id="pc-t2-c3"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Usage
+                         </td>
+                         <td class="tr" id="pc-t2-c4"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2 Cost
+                         </td>
+                         <td class="tr" id="pc-t2-c5"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-ccc"></i> Maintenance
+                         </td>
+                         <td class="tr" id="pc-t2-c6"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Revenue
+                         </td>
+                         <td class="tr" id="pc-t2-c7"></td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Profit
+                         </td>
+                         <td class="tr" id="pc-t2-c8"></td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <t class="fa fa-dollar col-dol"></t> Profit/Day
+                         </td>
+                         <td class="tr" id="pc-t2-c9"></td>
+                      </tr>
+                   </table>
+                </div>
+                <button class="pc-stbtn" onclick="$('#pc-table2').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
+            let arr = []
+            arr[0] = [(e(a.toLowerCase(), 1)[1] - e(b.toLowerCase(), 1)[1])]
+            arr[0][1] = arr[0][0].toString().charAt(0)
+            arr[0][2] = (arr[0][1] == "-") ? "+" : "-"
+            arr[1] = [(e(a.toLowerCase(), 2)[1] - e(b.toLowerCase(), 2)[1])]
+            arr[1][1] = arr[1][0].toString().charAt(0)
+            arr[1][2] = (arr[1][1] == "-") ? "+" : "-"
+            arr[2] = [(e(a.toLowerCase(), 3)[1] - e(b.toLowerCase(), 3)[1])]
+            arr[2][1] = arr[2][0].toString().charAt(0)
+            arr[2][2] = (arr[2][1] == "-") ? "+" : "-"
+            arr[3] = [(e(a.toLowerCase(), 4)[1] - e(b.toLowerCase(), 4)[1])]
+            arr[3][1] = arr[3][0].toString().charAt(0)
+            arr[3][2] = (arr[3][1] == "-") ? "+" : "-"
+            arr[4] = [(e(a.toLowerCase(), 5)[1] - e(b.toLowerCase(), 5)[1])]
+            arr[4][1] = arr[4][0].toString().charAt(0)
+            arr[4][2] = (arr[4][1] == "-") ? "+" : "-"
+            arr[5] = [(e(a.toLowerCase(), 6)[1] - e(b.toLowerCase(), 6)[1])]
+            arr[5][1] = arr[5][0].toString().charAt(0)
+            arr[5][2] = (arr[5][1] == "-") ? "+" : "-"
+            arr[6] = [(e(a.toLowerCase(), 7)[1] - e(b.toLowerCase(), 7)[1])]
+            arr[6][1] = arr[6][0].toString().charAt(0)
+            arr[6][2] = (arr[6][1] == "-") ? "+" : "-"
+            arr[7] = [(e(a.toLowerCase(), 8)[1] - e(b.toLowerCase(), 8)[1])]
+            arr[7][1] = arr[7][0].toString().charAt(0)
+            arr[7][2] = (arr[7][1] == "-") ? "+" : "-"
+            arr[8] = [(e(a.toLowerCase(), 9)[1] - e(b.toLowerCase(), 9)[1])]
+            arr[8][1] = arr[8][0].toString().charAt(0)
+            arr[8][2] = (arr[8][1] == "-") ? "+" : "-"
+            $("#pc-t2-c1").text(`${arr[0][2]} ${Math.round(Math.abs(arr[0][0]))}km`).css({ color: (($("#pc-t2-c1").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c2").text(`${arr[1][2]} ${commaNumber(Math.round(Math.abs(arr[1][0])))}lbs`).css({ color: (($("#pc-t2-c2").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c3").text(`${arr[2][2]} $${commaNumber(Math.round(Math.abs(arr[2][0])))}`).css({ color: (($("#pc-t2-c3").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c4").text(`${arr[3][2]} ${commaNumber(Math.round(Math.abs(arr[3][0])))}`).css({ color: (($("#pc-t2-c4").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c5").text(`${arr[4][2]} $${commaNumber(Math.round(Math.abs(arr[4][0])))}`).css({ color: (($("#pc-t2-c5").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c6").text(`${arr[5][2]} $${commaNumber(Math.round(Math.abs(arr[5][0])))}`).css({ color: (($("#pc-t2-c6").text().startsWith("-")) ? '#28a745' : '#dc3545') })
+            $("#pc-t2-c7").text(`${arr[6][2]} $${commaNumber(Math.round(Math.abs(arr[6][0])))}`).css({ color: (($("#pc-t2-c7").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c8").text(`${arr[7][2]} $${commaNumber(Math.round(Math.abs(arr[7][0])))}`).css({ color: (($("#pc-t2-c8").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-t2-c9").text(`${arr[8][2]} $${commaNumber(Math.round(Math.abs(arr[8][0])))}`).css({ color: (($("#pc-t2-c9").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+        }
+    }
+    // let a = document.getElementById("cmp1").value
+    // let b = document.getElementById("cmp2").value
+    // let c = document.getElementById("cmp3").value
+    // let d = document.getElementById("cmp4").value
 }
