@@ -642,8 +642,22 @@ function comparePlanes(gamemode) {
                 return "N/A"
         }
     }
+    function calcDifference(pa, pb) {
+       if(pa <= 0 || pb <= 0) {
+          $(".pc-reltable").hide()
+          $("#pc-rel1").text("0")
+          return
+       }
+       let pr = Math.round((pa / pb) * 1000) / 1000
+       return pr
+    }
     let a = document.getElementById("cmp1").value
     let b = document.getElementById("cmp2").value
+    if(acdb(a.toLowerCase())[9] == acdb(b.toLowerCase())[9]) {
+        alertBox("Please choose two different planes to compare.","#fa3737")
+        redCol()
+        return
+    }
     if(!isPlaneValid(a) || !isPlaneValid(b)) {
         alertBox("One of the planes you mentioned doesn't exist.","#fa3737")
         redCol()
@@ -656,7 +670,7 @@ function comparePlanes(gamemode) {
         if(gamemode == "r") {
             //plane1
             $("#pc-maincont").append(`
-                <div class="plane-content">
+                <div class="plane-content" style="opacity: 1">
                    <div class="plane-image-smallscreen">
                       <img src="${r(a.toLowerCase(), 11)}" class="plane-smallscreen">
                    </div>
@@ -677,7 +691,13 @@ function comparePlanes(gamemode) {
                    </div>
                 </div>
                 <div id="pc-table1">
-                   <table class="pc-table">
+                   <table class="pc-table pc-reltable">
+                      <tr class="res-1">
+                         <th id="pc-rel1" colspan="2"></th>
+                         <th id="pc-rel2" colspan="2"></th>
+                      </tr>
+                   </table>
+                   <table class="pc-table pc-tc1">
                       <tr class="res-1">
                          <td class="tl">
                             <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
@@ -734,6 +754,65 @@ function comparePlanes(gamemode) {
                          </td>
                          <td class="tr" id="pc-t1-c9"></td>
                       </tr>
+                      <tr class="uselesswidth"></tr>
+                   </table>
+                   <table class="pc-table pc-tc2">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-tachometer-alt col-107"></i> Speed
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[0]}kph</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-users col-107"></i> PAX
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[1]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-arrows-alt-h col-ccc"></i> Range
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[4]}km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-road col-777"></i> Runway
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[2]}ft</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint"></i> Fuel
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[5]}lbs/km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[6]}kg/pax/km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-777"></i> A-Check
+                         </td>
+                         <td class="tr">$${commaNumber(acdb(a.toLowerCase())[3])}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-clock col-0f0"></i> Time to Check
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[7]}H</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Price
+                         </td>
+                         <td class="tr">$${commaNumber(acdb(a.toLowerCase())[8])}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
                    </table>
                 </div>
                 <button class="pc-stbtn" onclick="$('#pc-table1').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
@@ -748,7 +827,7 @@ function comparePlanes(gamemode) {
             $("#pc-t1-c9").text(r(a.toLowerCase(), 9)[0])
             //plane2
             $("#pc-maincont").append(`
-                <div class="plane-content">
+                <div class="plane-content" style="opacity: 1">
                    <div class="plane-image-smallscreen">
                       <img src="${r(b.toLowerCase(), 11)}" class="plane-smallscreen">
                    </div>
@@ -769,7 +848,7 @@ function comparePlanes(gamemode) {
                    </div>
                 </div>
                 <div id="pc-table2">
-                   <table class="pc-table">
+                   <table class="pc-table pc-tc1">
                       <tr class="res-1">
                          <td class="tl">
                             <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
@@ -826,6 +905,65 @@ function comparePlanes(gamemode) {
                          </td>
                          <td class="tr" id="pc-t2-c9"></td>
                       </tr>
+                      <tr class="uselesswidth"></tr>
+                   </table>
+                   <table class="pc-table pc-tc2">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-tachometer-alt col-107"></i> Speed
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[0], acdb(b.toLowerCase())[0], "", "kph", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[0], acdb(b.toLowerCase())[0], "", "kph", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-users col-107"></i> PAX
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[1], acdb(b.toLowerCase())[1], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[1], acdb(b.toLowerCase())[1], "", "", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-arrows-alt-h col-ccc"></i> Range
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[4], acdb(b.toLowerCase())[4], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[4], acdb(b.toLowerCase())[4], "", "", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-road col-777"></i> Runway
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "ft", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "ft", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint"></i> Fuel
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "lbs/km", "#dc3545", "#28a745", 100)[1]}">${returnDiff(acdb(a.toLowerCase())[5], acdb(b.toLowerCase())[5], "", "lbs/km", "#dc3545", "#28a745", 100)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[6], acdb(b.toLowerCase())[6], "", "kg/pax/km", "#dc3545", "#28a745", 100)[1]}">${returnDiff(acdb(a.toLowerCase())[6], acdb(b.toLowerCase())[6], "", "kg/pax/km", "#dc3545", "#28a745", 100)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-777"></i> A-Check
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[3], acdb(b.toLowerCase())[3], "$", "", "#28a745", "#dc3545", 1)[1]}">${commaNumber(returnDiff(acdb(a.toLowerCase())[3], acdb(b.toLowerCase())[3], "$", "", "#28a745", "#dc3545", 1)[0])}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-clock col-0f0"></i> Time to Check
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[7], acdb(b.toLowerCase())[7], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[7], acdb(b.toLowerCase())[7], "", "H", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Price
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8], "$", "", "#dc3545", "#28a745", 1)[1]}">${commaNumber(returnDiff(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8], "$", "", "#dc3545", "#28a745", 1)[0])}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
                    </table>
                 </div>
                 <button class="pc-stbtn" onclick="$('#pc-table2').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
@@ -866,10 +1004,52 @@ function comparePlanes(gamemode) {
             $("#pc-t2-c7").text(`${arr[6][2]} $${commaNumber(Math.round(Math.abs(arr[6][0])))}`).css({ color: (($("#pc-t2-c7").text().startsWith("-")) ? '#dc3545' : '#28a745') })
             $("#pc-t2-c8").text(`${arr[7][2]} $${commaNumber(Math.round(Math.abs(arr[7][0])))}`).css({ color: (($("#pc-t2-c8").text().startsWith("-")) ? '#dc3545' : '#28a745') })
             $("#pc-t2-c9").text(`${arr[8][2]} $${commaNumber(Math.round(Math.abs(arr[8][0])))}`).css({ color: (($("#pc-t2-c9").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-rel1").text(calcDifference(realismProfit(a.toLowerCase()), realismProfit(b.toLowerCase())) + "x More Profitable")
+            $("#pc-rel2").text(calcDifference(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8]) + "x More Expensive")
+            if(document.getElementById("pc-rel1").innerHTML == 0 || document.getElementById("pc-rel2").innerHTML == 0) {
+               $(".pc-reltable").hide()
+            }
+            if(calcDifference(realismProfit(a.toLowerCase()), realismProfit(b.toLowerCase())) >= 1) {
+               $("#pc-rel1").css({ color: '#28a745' })
+            } else {
+               $("#pc-rel1").css({ color: '#dc3545' })
+            }
+            if(calcDifference(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8]) <= 1) {
+               $("#pc-rel2").css({ color: '#28a745' })
+            } else {
+               $("#pc-rel2").css({ color: '#dc3545' })
+            }
+            if(document.getElementById("pc-t2-c1").innerHTML == "- 0km" || document.getElementById("pc-t2-c1").innerHTML == "+ 0km") {
+               $("#pc-t2-c1").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c2").innerHTML == "- 0lbs" || document.getElementById("pc-t2-c2").innerHTML == "+ 0lbs") {
+               $("#pc-t2-c2").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c3").innerHTML == "- $0" || document.getElementById("pc-t2-c3").innerHTML == "+ $0") {
+               $("#pc-t2-c3").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c4").innerHTML == "- 0" || document.getElementById("pc-t2-c4").innerHTML == "+ 0") {
+               $("#pc-t2-c4").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c5").innerHTML == "- $0" || document.getElementById("pc-t2-c5").innerHTML == "+ $0") {
+               $("#pc-t2-c5").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c6").innerHTML == "- $0km" || document.getElementById("pc-t2-c6").innerHTML == "+ $0") {
+               $("#pc-t2-c6").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c7").innerHTML == "- $0" || document.getElementById("pc-t2-c7").innerHTML == "+ $0") {
+               $("#pc-t2-c7").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c8").innerHTML == "- $0" || document.getElementById("pc-t2-c8").innerHTML == "+ $0") {
+               $("#pc-t2-c8").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c9").innerHTML == "- $0" || document.getElementById("pc-t2-c9").innerHTML == "+ $0") {
+               $("#pc-t2-c9").css({ color: '#28a745' })
+            }
         } else if(gamemode =="e") {
             //plane1
             $("#pc-maincont").append(`
-                <div class="plane-content">
+                <div class="plane-content" style="opacity: 1">
                    <div class="plane-image-smallscreen">
                       <img src="${e(a.toLowerCase(), 11)}" class="plane-smallscreen">
                    </div>
@@ -890,7 +1070,13 @@ function comparePlanes(gamemode) {
                    </div>
                 </div>
                 <div id="pc-table1">
-                   <table class="pc-table">
+                   <table class="pc-table pc-reltable">
+                      <tr class="res-1">
+                         <th id="pc-rel1" colspan="2"></th>
+                         <th id="pc-rel2" colspan="2"></th>
+                      </tr>
+                   </table>
+                   <table class="pc-table pc-tc1">
                       <tr class="res-1">
                          <td class="tl">
                             <i class="fa fa-map-marked-alt routeDIcon"></i> Route Distance
@@ -947,6 +1133,65 @@ function comparePlanes(gamemode) {
                          </td>
                          <td class="tr" id="pc-t1-c9"></td>
                       </tr>
+                      <tr class="uselesswidth"></tr>
+                   </table>
+                   <table class="pc-table pc-tc2">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-tachometer-alt col-107"></i> Speed
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[0]}kph</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-users" col-107></i> PAX
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[1]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-arrows-alt-h col-ccc"></i> Range
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[4]}km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-road col-777"></i> Runway
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[2]}ft</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint"></i> Fuel
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[5]}lbs/km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[6]}kg/pax/km</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-777"></i> A-Check
+                         </td>
+                         <td class="tr">$${commaNumber(acdb(a.toLowerCase())[3])}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-0f0"></i> Time to Check
+                         </td>
+                         <td class="tr">${acdb(a.toLowerCase())[7]}H</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Price
+                         </td>
+                         <td class="tr">$${commaNumber(acdb(a.toLowerCase())[8])}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
                    </table>
                 </div>
                 <button class="pc-stbtn" onclick="$('#pc-table1').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
@@ -961,7 +1206,7 @@ function comparePlanes(gamemode) {
             $("#pc-t1-c9").text(e(a.toLowerCase(), 9)[0])
             //plane2
             $("#pc-maincont").append(`
-                <div class="plane-content">
+                <div class="plane-content" style="opacity: 1">
                    <div class="plane-image-smallscreen">
                       <img src="${e(b.toLowerCase(), 11)}" class="plane-smallscreen">
                    </div>
@@ -1039,6 +1284,65 @@ function comparePlanes(gamemode) {
                          </td>
                          <td class="tr" id="pc-t2-c9"></td>
                       </tr>
+                      <tr class="uselesswidth"></tr>
+                   </table>
+                   <table class="pc-table pc-tc2">
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-tachometer-alt col-107"></i> Speed
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[0], acdb(b.toLowerCase())[0], "", "kph", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[0], acdb(b.toLowerCase())[0], "", "kph", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-users col-107"></i> PAX
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[1], acdb(b.toLowerCase())[1], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[1], acdb(b.toLowerCase())[1], "", "", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-arrows-alt-h col-ccc"></i> Range
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[4], acdb(b.toLowerCase())[4], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[4], acdb(b.toLowerCase())[4], "", "", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-road col-777"></i> Runway
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "ft", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "ft", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="glyphicons glyphicons-tint"></i> Fuel
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[2], acdb(b.toLowerCase())[2], "", "lbs/km", "#dc3545", "#28a745", 100)[1]}">${returnDiff(acdb(a.toLowerCase())[5], acdb(b.toLowerCase())[5], "", "lbs/km", "#dc3545", "#28a745", 100)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-leaf col-0f0"></i> CO2
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[6], acdb(b.toLowerCase())[6], "", "kg/pax/km", "#dc3545", "#28a745", 100)[1]}">${returnDiff(acdb(a.toLowerCase())[6], acdb(b.toLowerCase())[6], "", "kg/pax/km", "#dc3545", "#28a745", 100)[0]}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-wrench col-777"></i> A-Check
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[3], acdb(b.toLowerCase())[3], "$", "", "#28a745", "#dc3545", 1)[1]}">${commaNumber(returnDiff(acdb(a.toLowerCase())[3], acdb(b.toLowerCase())[3], "$", "", "#28a745", "#dc3545", 1)[0])}</td>
+                      </tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-clock col-0f0"></i> Time to Check
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[7], acdb(b.toLowerCase())[7], "", "", "#dc3545", "#28a745", 1)[1]}">${returnDiff(acdb(a.toLowerCase())[7], acdb(b.toLowerCase())[7], "", "H", "#dc3545", "#28a745", 1)[0]}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
+                      <tr class="res-1">
+                         <td class="tl">
+                            <i class="fa fa-dollar col-dol"></i> Price
+                         </td>
+                         <td class="tr" style="color: ${returnDiff(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8], "$", "", "#dc3545", "#28a745", 1)[1]}">${commaNumber(returnDiff(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8], "$", "", "#dc3545", "#28a745", 1)[0])}</td>
+                      </tr>
+                      <tr class="uselesswidth"></tr>
                    </table>
                 </div>
                 <button class="pc-stbtn" onclick="$('#pc-table2').slideToggle()"><i class="fa fa-caret-down"></i></button>`)
@@ -1079,6 +1383,48 @@ function comparePlanes(gamemode) {
             $("#pc-t2-c7").text(`${arr[6][2]} $${commaNumber(Math.round(Math.abs(arr[6][0])))}`).css({ color: (($("#pc-t2-c7").text().startsWith("-")) ? '#dc3545' : '#28a745') })
             $("#pc-t2-c8").text(`${arr[7][2]} $${commaNumber(Math.round(Math.abs(arr[7][0])))}`).css({ color: (($("#pc-t2-c8").text().startsWith("-")) ? '#dc3545' : '#28a745') })
             $("#pc-t2-c9").text(`${arr[8][2]} $${commaNumber(Math.round(Math.abs(arr[8][0])))}`).css({ color: (($("#pc-t2-c9").text().startsWith("-")) ? '#dc3545' : '#28a745') })
+            $("#pc-rel1").text(calcDifference(easyProfit(a.toLowerCase()), easyProfit(b.toLowerCase())) + "x More Profitable")
+            $("#pc-rel2").text(calcDifference(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8]) + "x More Expensive")
+            if(document.getElementById("pc-rel1").innerHTML == 0 || document.getElementById("pc-rel2").innerHTML == 0) {
+               $(".pc-reltable").hide()
+            }
+            if(calcDifference(easyProfit(a.toLowerCase()), easyProfit(b.toLowerCase())) >= 1) {
+               $("#pc-rel1").css({ color: '#28a745' })
+            } else {
+               $("#pc-rel1").css({ color: '#dc3545' })
+            }
+            if(calcDifference(acdb(a.toLowerCase())[8], acdb(b.toLowerCase())[8]) <= 1) {
+               $("#pc-rel2").css({ color: '#28a745' })
+            } else {
+               $("#pc-rel2").css({ color: '#dc3545' })
+            }
+            if(document.getElementById("pc-t2-c1").innerHTML == "- 0km" || document.getElementById("pc-t2-c1").innerHTML == "+ 0km") {
+               $("#pc-t2-c1").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c2").innerHTML == "- 0lbs" || document.getElementById("pc-t2-c2").innerHTML == "+ 0lbs") {
+               $("#pc-t2-c2").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c3").innerHTML == "- $0" || document.getElementById("pc-t2-c3").innerHTML == "+ $0") {
+               $("#pc-t2-c3").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c4").innerHTML == "- 0" || document.getElementById("pc-t2-c4").innerHTML == "+ 0") {
+               $("#pc-t2-c4").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c5").innerHTML == "- $0" || document.getElementById("pc-t2-c5").innerHTML == "+ $0") {
+               $("#pc-t2-c5").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c6").innerHTML == "- $0km" || document.getElementById("pc-t2-c6").innerHTML == "+ $0") {
+               $("#pc-t2-c6").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c7").innerHTML == "- $0" || document.getElementById("pc-t2-c7").innerHTML == "+ $0") {
+               $("#pc-t2-c7").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c8").innerHTML == "- $0" || document.getElementById("pc-t2-c8").innerHTML == "+ $0") {
+               $("#pc-t2-c8").css({ color: '#28a745' })
+            }
+            if(document.getElementById("pc-t2-c9").innerHTML == "- $0" || document.getElementById("pc-t2-c9").innerHTML == "+ $0") {
+               $("#pc-t2-c9").css({ color: '#28a745' })
+            }
         }
     }
     // let a = document.getElementById("cmp1").value

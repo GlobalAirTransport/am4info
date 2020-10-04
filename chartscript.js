@@ -428,31 +428,40 @@ function playerchart() {
                     display: true,
                     text: 'Amount, Price and Fuel Efficiency'
                 }, scales: {
-                    yAxes: [{ 
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Aircraft Price"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
-                                    return "$" + label
+                    yAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Aircraft Price"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = Math.round(label / 1000)
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = Math.round(label / 1000000)
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    } else {
+                                        return "$" + label
+                                    }
                                 }
                             }
                         }
-                    }],
-                    xAxes: [{ 
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Fuel Efficiency"
+                    ], xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Fuel Efficiency"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    return label + "lbs/km"
+                                }
+                            }
                         }
-                    }]
+                    ]
                 },
                 tooltips: {
                     callbacks: {
@@ -707,6 +716,7 @@ function allychart() {
                             },
                             ticks: {
                                 callback: function(label, index, labels) {
+                                    label = Math.round(label)
                                     if(label >= 1000 && label <= 999999) {
                                         label = label / 1000
                                         return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
@@ -784,6 +794,10 @@ function allychart() {
                             scaleLabel: {
                                 display: true,
                                 labelString: "Contribution/Flight"
+                            }, ticks: {
+                                callback: function(label, index, labels) {
+                                    return "$" + label
+                                }
                             }
                         }
                     ]
@@ -855,6 +869,7 @@ function allychart() {
                             },
                             ticks: {
                                 callback: function(label, index, labels) {
+                                    label = Math.round(label)
                                     if(label >= 1000 && label <= 999999) {
                                         label = label / 1000
                                         return label + "k"
@@ -926,16 +941,6 @@ function allychart() {
                         }
                     }
                 },
-                scales: {
-                    yAxes: [
-                        { 
-                            scaleLabel: {
-                                display: true,
-                                labelString: "Contribution/Day"
-                            }
-                        }
-                    ]
-                },
                 legend: {
                     display: false
                 },
@@ -948,16 +953,16 @@ function allychart() {
                         { 
                             scaleLabel: {
                                 display: true,
-                                labelString: "C/D"
-                            },
-                            ticks: {
+                                labelString: "Contribution/Day"
+                            }, ticks: {
                                 callback: function(label, index, labels) {
+                                    label = Math.round(label)
                                     if(label >= 1000 && label <= 999999) {
                                         label = label / 1000
-                                        return "$" + label + "k"
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
                                     } else if(label >= 1000000) {
                                         label = label / 1000000
-                                        return "$" + label + "M"
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
                                     }
                                     return "$" + label
                                 }
@@ -1004,44 +1009,47 @@ function allychart() {
                     display: true,
                     text: "Contribution (total & per day)"
                 }, scales: {
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "C/D"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: "C/D"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = label / 1000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = label / 1000000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    }
                                     return "$" + label
                                 }
                             }
                         }
-                    }],
-                    xAxes: [{ 
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Total Contribution"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
+                    ], xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Total Contribution"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = label / 1000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = label / 1000000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    }
                                     return "$" + label
                                 }
                             }
                         }
-                    }]
+                    ]
                 },
                 tooltips: {
                     callbacks: {
@@ -1092,44 +1100,47 @@ function allychart() {
                     display: true,
                     text: "Contribution & Flights"
                 }, scales: {
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Flights"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Flights"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = label / 1000
+                                        return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = label / 1000000
+                                        return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    }
                                     return "$" + label
                                 }
                             }
                         }
-                    }],
-                    xAxes: [{ 
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Total Contribution"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
+                    ], xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Total Contribution"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = label / 1000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = label / 1000000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    }
                                     return "$" + label
                                 }
                             }
                         }
-                    }]
+                    ]
                 },
                 tooltips: {
                     callbacks: {
@@ -1180,36 +1191,39 @@ function allychart() {
                     display: true,
                     text: "Share Value & Daily Contribution"
                 }, scales: {
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Daily Contribution"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                if(label >= 1000 && label <= 999999) {
-                                    label = label / 1000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
-                                } else if(label >= 1000000) {
-                                    label = label / 1000000
-                                    return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
-                                } else {
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Daily Contribution"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    label = Math.round(label)
+                                    if(label >= 1000 && label <= 999999) {
+                                        label = label / 1000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "k"
+                                    } else if(label >= 1000000) {
+                                        label = label / 1000000
+                                        return "$" + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "M"
+                                    }
                                     return "$" + label
                                 }
                             }
                         }
-                    }],
-                    xAxes: [{ 
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Share Value"
-                        },
-                        ticks: {
-                            callback: function(label, index, labels) {
-                                return "$" + label
+                    ], xAxes: [
+                        { 
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Share Value"
+                            },
+                            ticks: {
+                                callback: function(label, index, labels) {
+                                    return "$" + label
+                                }
                             }
                         }
-                    }]
+                    ]
                 },
                 tooltips: {
                     callbacks: {
@@ -1227,7 +1241,6 @@ function allychart() {
         //TOP 5 CONTRIBUTORS
         if(r.members.length >= 5) {
             $(".top-info").show()
-            //charts: p(cont);p(cd);p(cf);p(sv);
             //C1
             try {
                 t1.destroy()
@@ -1240,7 +1253,7 @@ function allychart() {
                     labels: [u1, u2, u3, u4, u5],
                     datasets: [
                         {
-                            label: "Contribution",
+                            label: [u1, u2, u3, u4, u5],
                             backgroundColor: ['#103de0','#00ff3c','#fff200','#ff121e','#12ffdb'],
                             data: [ua1, ub1, uc1, ud1, ue1]
                         }
@@ -1263,7 +1276,8 @@ function allychart() {
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItems, data) {
-                                return `Contributed: $${commaNumber(tooltipItems.yLabel)}`
+                                let datasetLabel = data.datasets[tooltipItems.datasetIndex].label[tooltipItems.index] || ''
+                                return datasetLabel + `: $${commaNumber(tooltipItems.yLabel)}`
                             }
                         }
                     }
@@ -1281,7 +1295,7 @@ function allychart() {
                     labels: [u1, u2, u3, u4, u5],
                     datasets: [
                         {
-                            label: "C/D",
+                            label: [u1, u2, u3, u4, u5],
                             backgroundColor: ['#103de0','#00ff3c','#fff200','#ff121e','#12ffdb'],
                             data: [ua2, ub2, uc2, ud2, ue2]
                         }
@@ -1304,7 +1318,8 @@ function allychart() {
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItems, data) {
-                                return `C/D: $${commaNumber(tooltipItems.yLabel)}`
+                                let datasetLabel = data.datasets[tooltipItems.datasetIndex].label[tooltipItems.index] || ''
+                                return datasetLabel + `: $${commaNumber(tooltipItems.yLabel)}`
                             }
                         }
                     },
@@ -1325,7 +1340,7 @@ function allychart() {
                     labels: [u1, u2, u3, u4, u5],
                     datasets: [
                         {
-                            label: "Flights",
+                            label: [u1, u2, u3, u4, u5],
                             backgroundColor: ['#103de0','#00ff3c','#fff200','#ff121e','#12ffdb'],
                             data: [ua3, ub3, uc3, ud3, ue3]
                         }
@@ -1348,7 +1363,8 @@ function allychart() {
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItems, data) {
-                                return `Flights: ${commaNumber(tooltipItems.yLabel)}`
+                                let datasetLabel = data.datasets[tooltipItems.datasetIndex].label[tooltipItems.index] || ''
+                                return datasetLabel + `: ${commaNumber(tooltipItems.yLabel)} Flights`
                             }
                         }
                     },
@@ -1369,7 +1385,7 @@ function allychart() {
                     labels: [u1, u2, u3, u4, u5],
                     datasets: [
                         {
-                            label: "C/F",
+                            label: [u1, u2, u3, u4, u5],
                             backgroundColor: ['#103de0','#00ff3c','#fff200','#ff121e','#12ffdb'],
                             data: [ua4, ub4, uc4, ud4, ue4]
                         }
@@ -1392,7 +1408,8 @@ function allychart() {
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItems, data) {
-                                return `C/F: $${tooltipItems.yLabel}`
+                                let datasetLabel = data.datasets[tooltipItems.datasetIndex].label[tooltipItems.index] || ''
+                                return datasetLabel + `: $${Math.floor(tooltipItems.yLabel * 1000000) / 1000000}`
                             }
                         }
                     },
@@ -1413,7 +1430,7 @@ function allychart() {
                     labels: [u1, u2, u3, u4, u5],
                     datasets: [
                         {
-                            label: "SV",
+                            label: [u1, u2, u3, u4, u5],
                             backgroundColor: ['#103de0','#00ff3c','#fff200','#ff121e','#12ffdb'],
                             data: [ua5, ub5, uc5, ud5, ue5]
                         }
@@ -1436,7 +1453,8 @@ function allychart() {
                     tooltips: {
                         callbacks: {
                             label: function(tooltipItems, data) {
-                                return `Share Value: $${tooltipItems.yLabel}`
+                                let datasetLabel = data.datasets[tooltipItems.datasetIndex].label[tooltipItems.index] || ''
+                                return datasetLabel + `: $${tooltipItems.yLabel}`
                             }
                         }
                     },
@@ -1535,8 +1553,14 @@ function getOTime(t) {
         return `${d} minutes ago`
     } else if(d > 24) {
         d = Math.ceil(c / (1000 * 60 * 60 * 24))
+        if(d == 1) {
+            return `${d} day ago`
+        }
         return `${d} days ago`
     } else {
+        if(d == 1) {
+            return `${d} hour ago`
+        }
         return `${d} hours ago`
     }
 }
@@ -1556,6 +1580,10 @@ function compareMembers(oj) {
     }
     let a = document.getElementById("memberOne").value
     let b = document.getElementById("memberTwo").value
+    if(a == "" || b == "") {
+        alertBox("You need to select two members!","#fa3737")
+        return
+    }
     let at = checkEx(a, oj)
     let bt = checkEx(a, oj)
     if(!at || !bt) {
@@ -1563,7 +1591,7 @@ function compareMembers(oj) {
         return
     }
     if(a.toLowerCase() == b.toLowerCase()) {
-        alertBox("You have to compare 2 different members!","#fa3737")
+        alertBox("You have to select two different members!","#fa3737")
         return
     }
     //GET DATA PART
@@ -1737,6 +1765,9 @@ function compareMembers(oj) {
                         return `C/D: $${commaNumber(tooltipItems.yLabel)}`
                     }
                 }
+            },
+            legend: {
+                display: false
             }
         }
     })
@@ -1778,6 +1809,9 @@ function compareMembers(oj) {
                         return `Flights: ${commaNumber(tooltipItems.yLabel)}`
                     }
                 }
+            },
+            legend: {
+                display: false
             }
         }
     })
@@ -1819,6 +1853,9 @@ function compareMembers(oj) {
                         return `C/F: $${Math.floor(tooltipItems.yLabel * 1000000) / 1000000}`
                     }
                 }
+            },
+            legend: {
+                display: false
             }
         }
     })

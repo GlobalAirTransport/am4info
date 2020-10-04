@@ -23,16 +23,6 @@ var t2 = new Chart(document.getElementById("a-t2"), { type: 'line' })
 var t3 = new Chart(document.getElementById("a-t3"), { type: 'line' })
 var t4 = new Chart(document.getElementById("a-t4"), { type: 'line' })
 var t5 = new Chart(document.getElementById("a-t5"), { type: 'line' })
-$("#filter-icon").click(function() {
-   $("#filter-res").animate({
-      top: '40px'
-   }, 555)
-})
-$("#filter-removeres").click(function() {
-   $("#filter-res").animate({
-      top: '-130px'
-   }, 555)
-})
 function filterInput(obj) {
    let v = obj.value
    let i = 0
@@ -56,9 +46,18 @@ function paxcargo(pn) {
       return 2
    }
 }
+//POPUP CONTROLS
 $(".closebtn").click(function() {
    $(".whole-scr-modal").hide()
    $(".modal-content").hide()
+   $("#exec7").text("Search!").removeClass("loading")
+   document.getElementById("exec7").disabled = false
+   $("#exec8").text("Search!").removeClass("loading")
+   document.getElementById("exec8").disabled = false
+   $("#exec11").text("Search!").removeClass("loading")
+   document.getElementById("exec11").disabled = false
+   $("#exec12").text("Search!").removeClass("loading")
+   document.getElementById("exec12").disabled = false
 })
 $("#btn1").click(function() {
    $(".modal-content").hide()
@@ -94,6 +93,21 @@ $("#closebtn").click(function() {
    $("#alertbox").fadeOut()
    reversered()
 })
+$("#filter-icon").click(function() {
+   $(".modal-content").hide()
+   $(".whole-scr-modal").show()
+   $("#filtermenu").show()
+})
+$("#mail-icon").click(function() {
+   $(".modal-content").hide()
+   $(".whole-scr-modal").show()
+   $("#contactmenu").show()
+})
+$("#settings-icon").click(function() {
+   $(".modal-content").hide()
+   $(".whole-scr-modal").show()
+   $("#settingsmenu").show()
+})
 function alertBox(msg, col) {
    $("#alerttext").text(msg)
    $("#alertbox").css({ color: col }).show()
@@ -121,6 +135,85 @@ function isPlaneValid(p) {
       return false
    }
    return true
+}
+function returnDiff(a, b, f, l, c1, c2, m) {
+   let arr = []
+   arr[0] = a - b
+   arr[1] = arr[0].toString().charAt(0)
+   arr[2] = (arr[1] == "-") ? "+" : "-"
+   let r = []
+   r[0] = `${arr[2]} ${f}${Math.round(Math.abs(arr[0]) * m) / m}${l}`
+   r[1] = (r[0].toString().startsWith("-")) ? c1 : c2
+   return r
+}
+function showDetailedStats(o) {
+   let a = o.getAttribute("data-plane")
+   a = a.toString().toLowerCase()
+   $("#acinfo-showarea").empty()
+   $("#acinfo-showarea").append(`
+      <h3>${acdb(a)[9]}</h3>
+      <img src="AC images/${acdb(a)[11]}.png" class="acinfo-img">
+      <table style="margin: auto; width: calc(100% - .75rem); max-width: 400px">
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-tachometer-alt col-107"></i> Speed
+            </td>
+            <td class="tr">${acdb(a)[0]}kph</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-users col-107"></i> PAX
+            </td>
+            <td class="tr">${acdb(a)[1]}</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-arrows-alt-h col-ccc"></i> Range
+            </td>
+            <td class="tr">${acdb(a)[4]}km</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-road col-777"></i> Runway
+            </td>
+            <td class="tr">${acdb(a)[2]}ft</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="glyphicons glyphicons-tint"></i> Fuel
+            </td>
+            <td class="tr">${acdb(a)[5]}lbs/km</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-leaf col-0f0"></i> CO2
+            </td>
+            <td class="tr">${acdb(a)[6]}kg/pax/km</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-wrench col-777"></i> A-Check
+            </td>
+            <td class="tr">$${commaNumber(acdb(a)[3])}</td>
+         </tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-clock col-0f0"></i> Time to Check
+            </td>
+            <td class="tr">${acdb(a)[7]}H</td>
+         </tr>
+         <tr class="uselesswidth"></tr>
+         <tr class="res-1">
+            <td class="tl">
+               <i class="fa fa-dollar col-dol"></i> Price
+            </td>
+            <td class="tr">$${commaNumber(acdb(a)[8])}</td>
+         </tr>
+         <tr class="uselesswidth"></tr>
+      </table>
+   `)
+   $("#acinfo-displaymodalmenu").show()
+   $("#othermenu").hide()
 }
 //CARGO rework!
 function easyLarge(distance) {
@@ -612,18 +705,30 @@ $("#btn-rts2").click(function() {
 })
 //STOPOVER
 $("#exec7").click(function() {
-   searchstopover()
-   stmap.invalidateSize()
+   $("#exec7").text("Loading...").addClass("loading")
+   document.getElementById("exec7").disabled = true
+   setTimeout(function() {
+      searchstopover()
+      stmap.invalidateSize()
+   }, 1500)
 })
 $("#rts-ret1").click(function() {
+   $("#exec7").text("Search!").removeClass("loading")
+   document.getElementById("exec7").disabled = false
    $("#ans-rts1").hide()
    $("#tool-rts1").show()
 })
 //MARKETFIND
 $("#exec8").click(function() {
-   mfind()
+   $("#exec8").text("Loading...").addClass("loading")
+   document.getElementById("exec8").disabled = true
+   setTimeout(function() {
+      mfind()
+   }, 1000)
 })
 $("#rts-ret2").click(function() {
+   $("#exec8").text("Search!").removeClass("loading")
+   document.getElementById("exec8").disabled = false
    $("#ans-rts2").hide()
    $("#tool-rts2").show()
 })
@@ -654,12 +759,16 @@ $("#btn-oth3").click(function() {
 })
 //AC SEARCH
 $("#exec9").click(function() {
-   $(".plane-content").addClass("plane-hide")
+   $("#ans-oth1").empty().append(`<button class="returnbtn" id="oth-ret1"><i class="fa fa-long-arrow-alt-left"></i>  Return</button><br>`)
+   $("#oth-ret1").click(function() {
+      $("#ans-oth1").hide()
+      $("#tool-oth1").show()
+   })
    acsearch()
 })
-$("#oth-ret1").click(function() {
-   $("#ans-oth1").hide()
-   $("#tool-oth1").show()
+$("#acinfo-returnbtn").click(function() {
+   $("#acinfo-displaymodalmenu").hide()
+   $("#othermenu").show()
 })
 //RESELL
 $("#exec10").click(function() {
@@ -684,6 +793,10 @@ $("#exec13").click(function() {
       boxShadow: 'none',
       zIndex: 'initial'
    })
+})
+$("#pc-ssbtn").click(function() {
+   $(".pc-tc1").toggle()
+   $(".pc-tc2").toggle()
 })
 $("#cat13-s1").click(function() {
    comparePlanes("r")
@@ -736,17 +849,29 @@ $("#btn-cha2").click(function() {
 })
 //PLAYERCHART
 $("#exec11").click(function() {
-   playerchart()
+   $("#exec11").text("Loading Data...").addClass("loading")
+   document.getElementById("exec11").disabled = true
+   setTimeout(function() {
+      playerchart()
+   }, 1000)
 })
 $("#cha-ret1").click(function() {
+   $("#exec11").text("Search!").removeClass("loading")
+   document.getElementById("exec11").disabled = false
    $("#ans-cha1").hide()
    $("#tool-cha1").show()
 })
 //ALLYCHART
 $("#exec12").click(function() {
-   allychart()
+   $("#exec12").text("Loading Data...").addClass("loading")
+   document.getElementById("exec12").disabled = true
+   setTimeout(function() {
+      allychart()
+   }, 1000)
 })
 $("#cha-ret2").click(function() {
+   $("#exec12").text("Search!").removeClass("loading")
+   document.getElementById("exec12").disabled = false
    $("#ans-cha2").hide()
    $("#tool-cha2").show()
 })
